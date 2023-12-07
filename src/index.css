@@ -1,3 +1,71 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+:root {
+    --primary: #321fdb;
+    --black: #000;
+    --white: #fff;
+    --text-color: #333;
+
+  /* Default layout */
+  --default-layout-header-height: 60px;
+  --default-layout-width: 100%;
+  --default-layout-sidebar-width: 300px;
+
+  /* Default margin */
+  --default-margin-left: 20px;
+  --default-margin-right: 20px;
+  --default-margin-top: 20px;
+  --default-margin-bottom: 20px;
+  --default-margin: 20px;
+
+  --default-font-size: 1.6rem;
+
+  /* Default size table */
+  --default-width-table: 110px;
+
+  /* Default padding: */
+  --default-padding: 50px;
+
+  --default-padding-carousel: 20px;
+  --default-border-radius: 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  /* //font-family: 'Roboto', sans-serif; */
+  font-family: 'Roboto', 'Source Sans Pro', Arial, sans-serif;
+  /* //font-size: var(--default-font-size); */
+  line-height: 1.5;
+  text-rendering: optimizeSpeed;
+  /* color: var(--text-color); */
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  height: auto;
+  font-size: 1em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button, input, [tabindex] {
+  outline: none;
+  border: none;
+}
+
+a[href] {
+  /* color: var(--text-color); */
+  text-decoration: none;
+}
+

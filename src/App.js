@@ -1,13 +1,14 @@
 import React from "react";
 import "./App.css";
+import Router from "./routes/Router";
 
 function App() {
   return (
-    <div className="bg-gray-200 p-4 flex items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold text-gray-500">
-        This is the FoodRecipe website!
-      </h1>
-    </div>
+    <React.Fragment>
+      <div className="App">
+        <Router></Router>
+      </div>
+    </React.Fragment>
   );
 }
 
