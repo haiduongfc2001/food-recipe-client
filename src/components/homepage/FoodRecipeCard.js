@@ -1,22 +1,21 @@
 import { useState } from "react";
-import { Foods } from "../Data/HomepageData";
 import { INITIAL_PAGE, MAX_BUTTONS_TO_SHOW } from "../../utils/Constants";
 import { StarSVG } from "../Data/StarSVG";
 import { useNavigate } from "react-router-dom";
 
-function FoodRecipeCard({ itemsPerPage }) {
+function FoodRecipeCard({ itemsPerPage, searchResult }) {
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
   const [showDetails, setShowDetails] = useState(
-    Array(Foods.length).fill(false)
+    Array(searchResult.length).fill(false)
   );
 
   const navigate = useNavigate();
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentFoods = Foods.slice(startIndex, endIndex);
+  const currentsearchResult = searchResult.slice(startIndex, endIndex);
 
-  const totalPages = Math.ceil(Foods.length / itemsPerPage);
+  const totalPages = Math.ceil(searchResult.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -52,7 +51,7 @@ function FoodRecipeCard({ itemsPerPage }) {
         onMouseLeave={() => handleMouseLeave(index)}
       >
         <img
-          src={food.url}
+          src={food.image}
           alt={food.name}
           className="w-full h-48 object-cover"
         />
@@ -62,9 +61,9 @@ function FoodRecipeCard({ itemsPerPage }) {
             <h4 className="text-md text-gray-500">{food.description}</h4>
           </div>
           <div className="flex items-center justify-between mt-2">
-            <div>{food.cooking_time}</div>
+            <div>Thời gian: {food.cooking_time}</div>
             <div className="flex items-center mt-2">
-              <span className="text-yellow-500">{food.rate}</span>
+              <span className="text-yellow-500">{food.rating}</span>
               <StarSVG />
             </div>
           </div>
@@ -129,7 +128,7 @@ function FoodRecipeCard({ itemsPerPage }) {
 
   return (
     <div className="grid grid-cols-4 gap-4 my-10">
-      {currentFoods.map((food, index) => renderFoodCard(food, index))}
+      {currentsearchResult.map((food, index) => renderFoodCard(food, index))}
       {renderPageButtons()}
     </div>
   );
