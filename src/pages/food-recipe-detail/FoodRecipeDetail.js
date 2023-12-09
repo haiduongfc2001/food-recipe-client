@@ -55,7 +55,7 @@ function FoodReciprDetail() {
     }
   ]
   return (
-    <div className={styles.container}>
+    <div className='mx-12 mt-8'>
     <div className={styles.breakcrumb}>
       <BreakCrumbs/>
     </div>
@@ -87,11 +87,11 @@ function FoodReciprDetail() {
           </Link>
         </div>
         <div style={{display: 'flex', flexDirection: 'column',marginTop:'20px'}}>
-          <p style={{display: 'flex' , fontSize: '30px', fontWeight: 500}}>Thành Phần</p>
+          <p style={{display: 'flex' , fontSize: '28px', fontWeight: 500}}>Thành Phần</p>
           {foodIngredient.map( result =>(
           <div className={styles.ingredient}>
             <div style={{display: 'flex',flexDirection: 'column'}}>
-              <p style={{display: 'flex',fontSize: '20px'}}>{result.name} </p>
+              <p style={{display: 'flex',fontSize: '18px'}}>{result.name} </p>
               <p style={{display: 'flex',fontSize: '16px'}}>Số Lượng: {result.count}</p>
             </div>
             <div className={styles.ingredientImage}>
