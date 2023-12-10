@@ -169,9 +169,9 @@ function FoodRecipeDetail() {
       <div className={styles.foodDescription}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div className={styles.title}>
-            <p className={styles.titleText} onClick={()=> setClick(0)} style={{color : (click === 0) ? 'red': 'black'}}>Mô tả </p>
-            <p className={styles.titleText} onClick={()=> setClick(1)} style={{color : (click === 1) ? 'red': 'black'}}>Video hướng dẫn </p>
-            <p className={styles.titleText} onClick={()=> setClick(2)} style={{color : (click === 2) ? 'red': 'black'}}>Cách bảo quản thực phẩm</p>
+            <p onClick={()=> setClick(0)} className={styles.titleText + (click === 0 ? " font-black opacity-100 border-b-black" : "")} >Mô tả </p>
+            <p onClick={()=> setClick(1)} className={styles.titleText + (click === 1 ? " font-black opacity-100 border-b-black" : "")}>Video hướng dẫn </p>
+            <p onClick={()=> setClick(2)} className={styles.titleText + (click === 2 ? " font-black opacity-100 border-b-black" : "")}>Cách bảo quản thực phẩm</p>
           </div>
          {click === 0 && <div className={styles.description}>
             {dataRes?.steps.split("\n").map((line,index = 0) => (

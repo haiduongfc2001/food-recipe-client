@@ -94,7 +94,6 @@
 }
 .titleText:hover{
     opacity: 1;
-    border-color: black;
 }
 .description {
     display: block;
