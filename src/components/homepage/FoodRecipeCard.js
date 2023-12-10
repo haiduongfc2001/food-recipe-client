@@ -52,6 +52,9 @@ function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
     const handleNavigate = (foodRecipeID) => {
       const url = `/food-recipe-detail?id=${foodRecipeID}`;
       navigate(url);
+
+      // Cuộn lên đầu trang
+      window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return (

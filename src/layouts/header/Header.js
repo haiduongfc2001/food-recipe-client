@@ -53,19 +53,19 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-gray-100 text-white border-b-2 border-gray-700 min-w-full">
+    <header className=" text-white bg-slate-200 min-w-full">
       <div className="container mx-10  flex items-center justify-between py-4 px-10">
         <Link to="/" className="text-3xl font-bold text-black">
           FoodRecipe
         </Link>
 
         <div className="flex items-center">
-          <div className="ml-4 relative rounded-sm  border-2 border-gray-300  focus:outline-none focus:ring  focus:border-blue-300 transition-all duration-300 ease-in-out">
+          <div className="ml-4 relative rounded-lg border-2 border-gray-300  focus:outline-none focus:ring  focus:border-blue-300 transition-all duration-300 ease-in-out">
             <input
               ref={inputSearchRef}
               type="text"
               placeholder="Tìm kiếm công thức"
-              className="text-gray-700 py-2 px-4"
+              className="text-gray-700 py-2 px-4 rounded-lg focus:outline-none focus:ring  focus:border-blue-300 transition-all duration-300 ease-in-out"
               value={inputValue}
               onChange={handleSearchChange}
               onKeyDown={handleSearchKeyDown}
