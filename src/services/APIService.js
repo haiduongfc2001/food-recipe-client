@@ -1,30 +1,26 @@
 import { extractErrorInfo } from "./ExtractErrorInfo";
 import * as CommonService from "./CommonService";
 
-export const search = async ({ search }) => {
+export const search = async ({
+  search,
+  ingredients,
+  cooking_time,
+  max_max_rating,
+  page_size,
+  sort,
+  by,
+}) => {
   try {
     const res = await CommonService.post(
       "/search",
       {
         search,
-      },
-      {}
-    );
-
-    return res;
-  } catch (error) {
-    return extractErrorInfo(error);
-  }
-};
-
-export const filter = async ({ ingredients, times, rates }) => {
-  try {
-    const res = await CommonService.post(
-      "/filter",
-      {
         ingredients,
-        times,
-        rates,
+        cooking_time,
+        max_max_rating,
+        page_size,
+        sort,
+        by,
       },
       {}
     );

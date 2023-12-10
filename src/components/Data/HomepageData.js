@@ -1,15 +1,13 @@
 export const Foods = [];
 
-for (let i = 0; i < 120; i++) {
+for (let i = 0; i < 8; i++) {
   Foods.push({
     id: i + 1,
     name: "Food " + (i + 1),
-    url: "https://images.immediate.co.uk/production/volatile/sites/30/2023/06/Ultraprocessed-food-58d54c3.jpg?quality=90&resize=440,400",
-    description:
-      "Description of food aaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaa" +
-      (i + 1),
-    cooking_time: "10 phút",
-    rate: 4.0,
+    image:
+      "https://images.immediate.co.uk/production/volatile/sites/30/2023/06/Ultraprocessed-food-58d54c3.jpg?quality=90&resize=440,400",
+    cooking_time: "00:10:00",
+    rating: 4.0,
   });
 }
 
@@ -24,7 +22,7 @@ export const Ingredients = [
   { name: "Ngan", type: "checkbox" },
 ].map((ingredient, index) => ({ id: index + 1, ...ingredient }));
 
-export const Times = [
+export const CookingTime = [
   {
     name: "Dưới 20'",
     type: "radio",
@@ -47,7 +45,7 @@ export const Times = [
   },
 ].map((time, index) => ({ id: index + 1, ...time }));
 
-export const Rates = [
+export const Ratings = [
   {
     name: "Dưới 1 sao'",
     type: "radio",
@@ -69,3 +67,26 @@ export const Rates = [
     type: "radio",
   },
 ].map((rate, index) => ({ id: index + 1, ...rate }));
+
+export const SortOptions = [
+  {
+    title: "Mới nhất",
+    sort: "desc",
+    by: "updated_at",
+  },
+  {
+    title: "Cũ nhất",
+    sort: "asc",
+    by: "updated_at",
+  },
+  {
+    title: "Đánh giá cao",
+    sort: "desc",
+    by: "rating",
+  },
+  {
+    title: "Đánh giá thấp",
+    sort: "asc",
+    by: "rating",
+  },
+];

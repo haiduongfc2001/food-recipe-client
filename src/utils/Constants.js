@@ -2,6 +2,9 @@ export const PAGE_SIZE = 8;
 export const DISPLAY_PAGE_SIZE = [8, 12, 16];
 export const INITIAL_PAGE = 1;
 export const MAX_BUTTONS_TO_SHOW = 5;
+export const NOT_FOUND_RESULT = "Xin lỗi, không tìm thấy kết quả";
+export const NOT_FOUND_RESULT_FOR_SEARCH =
+  "Chúng tôi không thể tìm thấy bất kỳ kết quả nào cho tìm kiếm của bạn.";
 
 export const STATUS_CODE = {
   OK: 200,
@@ -16,6 +19,5 @@ export const REACT_APP_BASE_URL = "http://localhost:5000";
 
 export const API_SERVICE = {
   SEARCH: "search",
-  FILTER: "filter",
   GET_FOOD_RECIPE_DETAIL: "getFoodRecipeDetail",
 };
