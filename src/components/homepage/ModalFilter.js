@@ -1,12 +1,71 @@
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Ingredients, Times, Rates } from "../Data/HomepageData";
+import { Ingredients, CookingTime, Ratings } from "../Data/HomepageData";
+import { useState } from "react";
+import * as APIService from "../../services/APIService";
+import { API_SERVICE, STATUS_CODE } from "../../utils/Constants";
+import storageInstance from "../../services/Storage";
+import "../../components/homepage/HomepageStyle.scss";
 
-function ModalFilter({ handleModalFilterClose }) {
-  const handleFilter = (e) => {
+function ModalFilter({ handleModalFilterClose, setSearchResult, serLoading }) {
+  const [checkedItems, setCheckedItems] = useState({
+    ingredients: [],
+    cooking_time: null,
+    max_rating: null,
+  });
+
+  const api = API_SERVICE.SEARCH;
+
+  const handleCheckboxChange = (group, value) => {
+    const isChecked = checkedItems[group].includes(value);
+
+    setCheckedItems((prevCheckedItems) => ({
+      ...prevCheckedItems,
+      [group]: isChecked
+        ? prevCheckedItems[group].filter((item) => item !== value)
+        : [...prevCheckedItems[group], value],
+    }));
+  };
+
+  const handleRadioChange = (group, value) => {
+    setCheckedItems((prevCheckedItems) => ({
+      ...prevCheckedItems,
+      [group]: value,
+    }));
+  };
+
+  const handleFilter = async (e) => {
     e.preventDefault();
 
+    if (
+      !checkedItems.ingredients.length &&
+      !checkedItems.cooking_time &&
+      !checkedItems.max_rating
+    )
+      return;
+
+    serLoading(true);
+
     handleModalFilterClose();
+
+    // Object.entries(checkedItems): chuyển đổi đối tượng checkedItems thành  môt mảng các căp [key, value]
+    // .filter: lọc các cặp [key, value] với điều kiện value !== null
+    // Object.fromEntries: chuyển đổi mảng các cặp [key, value] đã được lọc thành 1 Object mới
+    const nonEmptyCheckedItems = Object.fromEntries(
+      Object.entries(checkedItems).filter(([key, value]) => {
+        return value !== null && !(Array.isArray(value) && value.length === 0);
+      })
+    );
+
+    const response = await APIService[api](nonEmptyCheckedItems);
+
+    if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
+      serLoading(false);
+      storageInstance.updateSessionFoodSearch(response);
+      setSearchResult(response);
+    } else {
+      alert("Server error!");
+    }
   };
 
   return (
@@ -22,7 +81,7 @@ function ModalFilter({ handleModalFilterClose }) {
           </button>
         </div>
 
-        <div className="p-10">
+        <div className="px-10 py-6">
           {/* Nguyên liệu */}
           <div className="mb-10">
             <div className="bg-blue-500 text-white py-2 px-4 rounded mb-4 w-1/4">
@@ -30,8 +89,24 @@ function ModalFilter({ handleModalFilterClose }) {
             </div>
             <div className="grid grid-cols-4 gap-4">
               {Ingredients.map((ingredient) => (
-                <label key={ingredient.id} className="flex items-center">
-                  <input type={ingredient.type} className="mr-2" />
+                <label
+                  key={ingredient.id}
+                  className="flex items-center checkbox-label"
+                >
+                  <input
+                    type={ingredient.type}
+                    className="hidden"
+                    value={ingredient.name}
+                    onChange={() =>
+                      handleCheckboxChange(
+                        "ingredients",
+                        ingredient.name.toLowerCase()
+                      )
+                    }
+                  />
+                  <div className="custom-checkbox">
+                    <div className="checkbox-icon"></div>
+                  </div>
                   {ingredient.name}
                 </label>
               ))}
@@ -44,9 +119,18 @@ function ModalFilter({ handleModalFilterClose }) {
               Thời gian
             </div>
             <div className="grid grid-cols-5 gap-5">
-              {Times.map((time) => (
-                <label key={time.id} className="flex items-center">
-                  <input type={time.type} name="time" className="mr-2" />
+              {CookingTime.map((time, index) => (
+                <label key={time.id} className="flex items-center radio-label">
+                  <input
+                    type={time.type}
+                    name="time"
+                    className="hidden"
+                    value={time.name}
+                    onChange={() =>
+                      handleRadioChange("cooking_time", index + 1)
+                    }
+                  />
+                  <div className="custom-radio-cooking-time"></div>
                   {time.name}
                 </label>
               ))}
@@ -59,10 +143,20 @@ function ModalFilter({ handleModalFilterClose }) {
               Số sao đánh giá
             </div>
             <div className="grid grid-cols-5 gap-5">
-              {Rates.map((rate) => (
-                <label key={rate.id} className="flex items-center">
-                  <input type={rate.type} name="rating" className="mr-2" />
-                  {rate.name}
+              {Ratings.map((max_rating, index) => (
+                <label
+                  key={max_rating.id}
+                  className="flex items-center radio-label"
+                >
+                  <input
+                    type={max_rating.type}
+                    name="max_rating"
+                    className="hidden"
+                    value={max_rating.name}
+                    onChange={() => handleRadioChange("max_rating", index + 1)}
+                  />
+                  <div className="custom-radio-max_rating"></div>
+                  {max_rating.name}
                 </label>
               ))}
             </div>
@@ -71,11 +165,23 @@ function ModalFilter({ handleModalFilterClose }) {
 
         <div className="flex justify-end p-4">
           <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-4 w-1/6"
+            className={` text-white font-bold py-2 px-4 rounded mx-4 w-1/6 ${
+              !checkedItems.ingredients.length &&
+              !checkedItems.cooking_time &&
+              !checkedItems.max_rating
+                ? "cursor-not-allowed bg-gray-400"
+                : "bg-green-500 hover:bg-green-700"
+            }`}
+            disabled={
+              !checkedItems.ingredients.length &&
+              !checkedItems.cooking_time &&
+              !checkedItems.max_rating
+            }
             onClick={handleFilter}
           >
             Lọc
           </button>
+
           <button
             className="bg-gray-500 hover:bg-red-500 text-white font-bold py-2 px-4 rounded w-1/6"
             onClick={handleModalFilterClose}

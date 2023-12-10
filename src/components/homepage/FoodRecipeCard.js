@@ -2,8 +2,9 @@ import { useState } from "react";
 import { INITIAL_PAGE, MAX_BUTTONS_TO_SHOW } from "../../utils/Constants";
 import { StarSVG } from "../Data/StarSVG";
 import { useNavigate } from "react-router-dom";
+import FormatDuration from "../../utils/FormatDuration";
 
-function FoodRecipeCard({ itemsPerPage, searchResult }) {
+function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
   const [showDetails, setShowDetails] = useState(
     Array(searchResult.length).fill(false)
@@ -18,7 +19,13 @@ function FoodRecipeCard({ itemsPerPage, searchResult }) {
   const totalPages = Math.ceil(searchResult.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
+    if (!foodCardRef) return;
+
     setCurrentPage(pageNumber);
+
+    if (foodCardRef.current) {
+      foodCardRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const renderFoodCard = (food, index) => {
@@ -43,6 +50,10 @@ function FoodRecipeCard({ itemsPerPage, searchResult }) {
       navigate(url);
     };
 
+    const capitalizeFirstLetter = (str) => {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     return (
       <div
         key={index}
@@ -57,13 +68,15 @@ function FoodRecipeCard({ itemsPerPage, searchResult }) {
         />
         <div className="p-4 bg-gray-100 flex flex-col justify-between">
           <div className="flex-grow">
-            <h3 className="text-lg font-semibold">{food.name}</h3>
+            <h3 className="text-lg font-semibold">
+              {capitalizeFirstLetter(food.name)}
+            </h3>
             <h4 className="text-md text-gray-500">{food.description}</h4>
           </div>
-          <div className="flex items-center justify-between mt-2">
-            <div>Thời gian: {food.cooking_time}</div>
-            <div className="flex items-center mt-2">
-              <span className="text-yellow-500">{food.rating}</span>
+          <div className="flex items-center justify-between mt-4">
+            <div>Thời gian: {FormatDuration(food.cooking_time)}</div>
+            <div className="flex items-center">
+              <span className="text-yellow-500 pr-1">{food.rating}</span>
               <StarSVG />
             </div>
           </div>
@@ -107,7 +120,9 @@ function FoodRecipeCard({ itemsPerPage, searchResult }) {
               key={page}
               onClick={() => handlePageChange(page)}
               className={`mx-2 px-3 py-1 rounded ${
-                currentPage === page ? "bg-blue-500 text-white" : "bg-gray-300"
+                currentPage === page
+                  ? "bg-blue-500 text-white cursor-default"
+                  : "bg-gray-300 hover:bg-blue-300"
               }`}
             >
               {page}
@@ -127,7 +142,7 @@ function FoodRecipeCard({ itemsPerPage, searchResult }) {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-4 my-10">
+    <div className="grid grid-cols-4 gap-4 my-10 bg-slate-200  p-8 rounded-lg shadow-md">
       {currentsearchResult.map((food, index) => renderFoodCard(food, index))}
       {renderPageButtons()}
     </div>
