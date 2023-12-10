@@ -16,7 +16,7 @@ import {
   STATUS_CODE,
 } from "../../utils/Constants";
 import storageInstance from "../../services/Storage";
-import { Foods, SortOptions } from "../../components/Data/HomepageData";
+import { SortOptions } from "../../components/Data/HomepageData";
 import Loading from "../../components/homepage/Loading";
 import * as APIService from "../../services/APIService";
 
@@ -26,15 +26,15 @@ function Homepage() {
   const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZE);
   const [sortOption, setSortOption] = useState(null);
 
-  const [inputValue, setInputValue] = useState(
-    storageInstance.getSessionInputValue("inputValue")
-  );
+  const inputValue = storageInstance.getSessionInputValue("inputValue") ?? null;
 
-  const [loading, serLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [searchResult, setSearchResult] = useState(
     storageInstance.getSessionFoodSearch("foodSearch")
   );
+
+  const [foodRecipeTop, setFoodRecipeTop] = useState([]);
 
   const foodCardRef = useRef(null);
 
@@ -58,7 +58,7 @@ function Homepage() {
     setSortOption(option.title);
     toggleDropdown();
 
-    serLoading(true);
+    setLoading(true);
 
     const options = {
       sort: option.sort,
@@ -70,7 +70,7 @@ function Homepage() {
     const response = await APIService[API_SERVICE.SEARCH](options);
 
     if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
-      serLoading(false);
+      setLoading(false);
       storageInstance.updateSessionFoodSearch(response);
       setSearchResult(response);
     }
@@ -82,7 +82,24 @@ function Homepage() {
     }
   };
 
+  const fetchFoodRecipeTop = async () => {
+    try {
+      setLoading(true);
+      const response = await APIService[API_SERVICE.SEARCH]({
+        search: "",
+      });
+
+      if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
+        setFoodRecipeTop(response);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
+  };
+
   useEffect(() => {
+    fetchFoodRecipeTop();
     scrollToFoodCard();
   }, []);
 
@@ -103,7 +120,7 @@ function Homepage() {
 
       <div
         className="flex items-center justify-evenly bg-slate-200 mx-10 py-2 rounded-lg rounded-tl-none rounded-tr-none"
-        ref={inputValue && Object.keys(inputValue).length !== 0 && foodCardRef}
+        ref={inputValue ? foodCardRef : null}
       >
         <div onClick={handleModalFilterOpen}>
           <FontAwesomeIcon icon={faFilter} />
@@ -194,19 +211,28 @@ function Homepage() {
           )}
         </div>
 
-        <div className="py-2 px-10">
-          <h1 className="text-left font-bold text-3xl text-gray-800 border-b-2 border-gray-500 pb-2 my-10">
-            Các công thức nổi bật
-          </h1>
-          <FoodRecipeCard itemsPerPage={itemsPerPage} searchResult={Foods} />
-        </div>
+        {foodRecipeTop && foodRecipeTop.length > 0 && (
+          <div className="py-2 px-10">
+            <h1 className="text-left font-bold text-3xl text-gray-800 border-b-2 border-gray-500 pb-2 my-10">
+              Các công thức nổi bật
+            </h1>
+            {loading ? (
+              <Loading />
+            ) : (
+              <FoodRecipeCard
+                itemsPerPage={itemsPerPage}
+                searchResult={foodRecipeTop}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       {isModalFilterOpen && (
         <ModalFilter
           handleModalFilterClose={handleModalFilterClose}
           setSearchResult={setSearchResult}
-          serLoading={serLoading}
+          setLoading={setLoading}
         />
       )}
     </div>

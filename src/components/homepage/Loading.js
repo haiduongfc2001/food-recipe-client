@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { LOADING_DATA } from "../../utils/Constants";
 
 const Loading = () => {
   return (
@@ -9,7 +10,7 @@ const Loading = () => {
         <FontAwesomeIcon icon={faSpinner} spin size="3x" />
       </div>
       <div className="ml-3 text-gray-700 text-xl font-semibold">
-        Đang tìm kiếm...
+        {LOADING_DATA}
       </div>
     </div>
   );

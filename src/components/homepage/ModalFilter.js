@@ -7,7 +7,7 @@ import { API_SERVICE, STATUS_CODE } from "../../utils/Constants";
 import storageInstance from "../../services/Storage";
 import "../../components/homepage/HomepageStyle.scss";
 
-function ModalFilter({ handleModalFilterClose, setSearchResult, serLoading }) {
+function ModalFilter({ handleModalFilterClose, setSearchResult, setLoading }) {
   const [checkedItems, setCheckedItems] = useState({
     ingredients: [],
     cooking_time: null,
@@ -44,7 +44,7 @@ function ModalFilter({ handleModalFilterClose, setSearchResult, serLoading }) {
     )
       return;
 
-    serLoading(true);
+    setLoading(true);
 
     handleModalFilterClose();
 
@@ -60,7 +60,7 @@ function ModalFilter({ handleModalFilterClose, setSearchResult, serLoading }) {
     const response = await APIService[api](nonEmptyCheckedItems);
 
     if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
-      serLoading(false);
+      setLoading(false);
       storageInstance.updateSessionFoodSearch(response);
       setSearchResult(response);
     } else {
