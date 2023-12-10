@@ -29,6 +29,7 @@ function Homepage() {
   const inputValue = storageInstance.getSessionInputValue("inputValue") ?? null;
 
   const [loading, setLoading] = useState(false);
+  const [loadingFoodRecipeTop, setLoadingFoodRecipeTop] = useState(false);
 
   const [searchResult, setSearchResult] = useState(
     storageInstance.getSessionFoodSearch("foodSearch")
@@ -84,14 +85,14 @@ function Homepage() {
 
   const fetchFoodRecipeTop = async () => {
     try {
-      setLoading(true);
+      setLoadingFoodRecipeTop(true);
       const response = await APIService[API_SERVICE.SEARCH]({
         search: "",
       });
 
       if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
-        setFoodRecipeTop(response);
-        setLoading(false);
+        setFoodRecipeTop(response.slice(0, 8));
+        setLoadingFoodRecipeTop(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error.message);
@@ -175,48 +176,51 @@ function Homepage() {
       </div>
 
       <div>
-        <div className="mx-10 py-2">
-          {/* <h1 className="text-left font-bold text-3xl text-gray-800 border-b-2 border-gray-500 pb-2 my-10">
+        {sessionStorage.getItem("foodSearch") &&
+          sessionStorage.getItem("inputValue") && (
+            <div className="mx-10 py-2">
+              {/* <h1 className="text-left font-bold text-3xl text-gray-800 border-b-2 border-gray-500 pb-2 my-10">
             {inputValue && Object.keys(inputValue).length !== 0
               ? `Kết quả tìm kiếm của: ${inputValue}`
               : "Kết quả:"}
           </h1> */}
 
-          {loading ? (
-            <Loading />
-          ) : searchResult && searchResult.length > 0 ? (
-            <FoodRecipeCard
-              itemsPerPage={itemsPerPage}
-              searchResult={searchResult}
-              foodCardRef={foodCardRef}
-            />
-          ) : (
-            <div className="text-center my-10">
-              <div className="bg-slate-200 p-8 rounded-lg shadow-md">
-                <h1 className="text-4xl font-bold text-red-500 mb-4">
-                  {NOT_FOUND_RESULT}
-                </h1>
-                <p className="text-gray-600">
-                  {NOT_FOUND_RESULT_FOR_SEARCH}
-                  <span
-                    role="img"
-                    aria-label="Crying Face"
-                    className="text-2xl ml-2"
-                  >
-                    😢
-                  </span>
-                </p>
-              </div>
+              {loading ? (
+                <Loading />
+              ) : searchResult && searchResult.length > 0 ? (
+                <FoodRecipeCard
+                  itemsPerPage={itemsPerPage}
+                  searchResult={searchResult}
+                  foodCardRef={foodCardRef}
+                />
+              ) : (
+                <div className="text-center my-10">
+                  <div className="bg-slate-200 p-8 rounded-lg shadow-md">
+                    <h1 className="text-4xl font-bold text-red-500 mb-4">
+                      {NOT_FOUND_RESULT}
+                    </h1>
+                    <p className="text-gray-600">
+                      {NOT_FOUND_RESULT_FOR_SEARCH}
+                      <span
+                        role="img"
+                        aria-label="Crying Face"
+                        className="text-2xl ml-2"
+                      >
+                        😢
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
-        </div>
 
         {foodRecipeTop && foodRecipeTop.length > 0 && (
           <div className="py-2 px-10">
             <h1 className="text-left font-bold text-3xl text-gray-800 border-b-2 border-gray-500 pb-2 my-10">
               Các công thức nổi bật
             </h1>
-            {loading ? (
+            {loadingFoodRecipeTop ? (
               <Loading />
             ) : (
               <FoodRecipeCard

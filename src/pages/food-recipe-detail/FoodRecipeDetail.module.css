@@ -73,6 +73,7 @@
     flex-direction: column;
     border-top: 2px solid #e3e3e4;
     padding-top: 20px;
+    margin: 'auto 40px'
 }
 .title {
     display: flex;
@@ -142,7 +143,6 @@
     border-top-right-radius: 8px;
 }
 .moreProduct{
-    margin: 80px 0px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -152,4 +152,8 @@
     background-color: white;
     font-size: 22px;
     padding: 5px;
+}
+.moreProduct:hover{
+    background-color: #e3e3e4;
+    cursor: pointer;
 }

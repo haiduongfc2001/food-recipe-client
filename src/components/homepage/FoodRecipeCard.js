@@ -3,6 +3,7 @@ import { INITIAL_PAGE, MAX_BUTTONS_TO_SHOW } from "../../utils/Constants";
 import { StarSVG } from "../Data/StarSVG";
 import { useNavigate } from "react-router-dom";
 import FormatDuration from "../../utils/FormatDuration";
+import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
 
 function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
@@ -51,10 +52,6 @@ function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
     const handleNavigate = (foodRecipeID) => {
       const url = `/food-recipe-detail?id=${foodRecipeID}`;
       navigate(url);
-    };
-
-    const capitalizeFirstLetter = (str) => {
-      return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
     return (
@@ -147,7 +144,7 @@ function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
   return (
     <div className="grid grid-cols-4 gap-4 my-10 bg-slate-200  p-8 rounded-lg shadow-md">
       {currentsearchResult.map((food, index) => renderFoodCard(food, index))}
-      {renderPageButtons()}
+      {foodCardRef && renderPageButtons()}
     </div>
   );
 }
