@@ -36,7 +36,7 @@ function FoodRecipeDetail() {
       </div>
       { Object.keys(dataRes).length !== 0 && (
       <>
-      <div className="flex">
+      <div className="flex mr-3 my-8 ml-8">
         <div className={styles.foodImage}>
           <img
             src={dataRes?.images[0]?.url}
