@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-slate-200 text-white  min-w-full">
+    <footer className="bg-slate-200 text-white  min-w-full mt-10">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold text-gray-900 sm:flex ml-2 mb-10">
           FoodRecipe

@@ -215,21 +215,18 @@ function Homepage() {
             </div>
           )}
 
-        {foodRecipeTop && foodRecipeTop.length > 0 && (
-          <div className="py-2 px-10">
-            <h1 className="text-left font-bold text-3xl text-gray-800 border-b-2 border-gray-500 pb-2 my-10">
-              Các công thức nổi bật
-            </h1>
-            {loadingFoodRecipeTop ? (
-              <Loading />
-            ) : (
-              <FoodRecipeCard
-                itemsPerPage={itemsPerPage}
-                searchResult={foodRecipeTop}
-              />
-            )}
-          </div>
-        )}
+        <div className="py-2 px-10">
+          <h1 className="text-left font-bold text-3xl text-gray-800 border-b-2 border-gray-500 pb-2 my-10">
+            Các công thức nổi bật
+          </h1>
+          {loadingFoodRecipeTop && <Loading />}
+          {foodRecipeTop && foodRecipeTop.length > 0 && (
+            <FoodRecipeCard
+              itemsPerPage={itemsPerPage}
+              searchResult={foodRecipeTop}
+            />
+          )}
+        </div>
       </div>
 
       {isModalFilterOpen && (
