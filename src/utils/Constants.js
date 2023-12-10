@@ -5,6 +5,7 @@ export const MAX_BUTTONS_TO_SHOW = 5;
 export const NOT_FOUND_RESULT = "Xin lỗi, không tìm thấy kết quả";
 export const NOT_FOUND_RESULT_FOR_SEARCH =
   "Chúng tôi không thể tìm thấy bất kỳ kết quả nào cho tìm kiếm của bạn.";
+export const LOADING_DATA = "Đang tải...";
 
 export const STATUS_CODE = {
   OK: 200,

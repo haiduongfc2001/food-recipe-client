@@ -14,7 +14,10 @@ function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentsearchResult = searchResult.slice(startIndex, endIndex);
+  const currentsearchResult =
+    Array.isArray(searchResult) && searchResult.length
+      ? searchResult.slice(startIndex, endIndex)
+      : [];
 
   const totalPages = Math.ceil(searchResult.length / itemsPerPage);
 
