@@ -1,10 +1,5 @@
 
-.breakcrumb{
-    margin-left: 30px
-}
-
 .foodRecipeDetail {
-    display: flex;
     margin: 30px 10px 30px 30px;
 }
 
@@ -107,16 +102,17 @@
 }
 .description {
     display: block;
+    overflow-y: auto;
     margin: 30px 0px;
     height: 300px;
-    max-height: 400px
+    max-height: 500px;
 }
 .moreImage {
     padding: 0px 20px;
     display: grid;
     grid-template-columns: auto auto auto;
     grid-column-gap: 20px;
-    max-height: 500px;
+    grid-row-gap: 30px;
     margin-bottom: 50px;
 }
 .moreImage > img {

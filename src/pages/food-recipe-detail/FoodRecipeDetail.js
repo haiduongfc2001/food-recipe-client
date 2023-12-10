@@ -5,71 +5,10 @@ import * as APIService from "../../services/APIService";
 import { API_SERVICE, STATUS_CODE } from "../../utils/Constants";
 import { useEffect, useState } from "react";
 
-function FoodReciprDetail() {
-  const foodIngredient = [
-    {
-      name: "Gừng",
-      count: 2,
-      imageURL:
-        "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2021/10/28/gung-co-tac-dung-gi-2-1635438675606590955706.jpg",
-    },
-    {
-      name: "Ớt",
-      count: 2,
-      imageURL:
-        "https://vcdn-suckhoe.vnecdn.net/2019/09/02/qua-o-t-jpeg-1567388531-5300-1567389132.png",
-    },
-    {
-      name: "Gia vị",
-      count: 1,
-      imageURL: "https://cdn.tgdd.vn/2020/12/content/11-800x500-5.jpg",
-    },
-    {
-      name: "Cá trắm",
-      count: 1,
-      imageURL:
-        "https://cdn.abphotos.link/photos/resized/1024x/2022/10/05/1664945319_Hzc9Ifj6rshCbXYE_1664946047-phpnn0ggf.png",
-    },
-  ];
-
-  const moreImage = [
-    {
-      imageURL:
-        "https://www.huongnghiepaau.com/wp-content/uploads/2016/05/ca-loc-kho-to-tham-dam-gia-vi.jpg",
-    },
-    {
-      imageURL:
-        "https://i0.wp.com/caboptuoisong.com/images/caboptuoisongcom/2017/03/cach-lam-ca-bop-kho-to-dam-da-ngon.jpg",
-    },
-    {
-      imageURL:
-        "https://cdn.tgdd.vn/Files/2021/02/23/1329799/bi-quyet-nau-ca-kho-to-ngon-chuan-vi-ca-dai-mau-sac-chuan-dep-202102231139008474.jpg",
-    },
-  ];
-  const moreSimilarFood = [
-    {
-      name: "Trứng kho",
-      imageURL:
-        "https://cdn3.ivivu.com/2020/12/cach-lam-trung-kho-nuoc-tuong-sieu-de-nhung-rat-dua-com-ivivu-1.jpg",
-    },
-    {
-      name: "Thịt kho tàu",
-      imageURL:
-        "https://static-images.vnncdn.net/files/publish/2023/3/31/thit-kho-tau-2-183.jpg",
-    },
-    {
-      name: "Tôm kho thịt",
-      imageURL:
-        "https://cdn.tgdd.vn/Files/2021/02/23/1329799/bi-quyet-nau-ca-kho-to-ngon-chuan-vi-ca-dai-mau-sac-chuan-dep-202102231139008474.jpg",
-    },
-    {
-      name: "Gà kho",
-      imageURL: "https://cdn.tgdd.vn/2021/01/CookProduct/gathum-1200x676.jpg",
-    },
-  ];
+function FoodRecipeDetail() {
 
   const [dataRes, setDataRes] = useState({});
-
+  const [click,setClick] = useState(0);
   const urlParams = new URLSearchParams(window.location.search);
   const currentFoodRecipeID = urlParams.get("id");
   const api = API_SERVICE.GET_FOOD_RECIPE_DETAIL;
@@ -80,7 +19,6 @@ function FoodReciprDetail() {
 
       if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
         setDataRes(response);
-        console.log("Response: ", response);
       }
     } catch (error) {
       alert("Server error!");
@@ -88,23 +26,25 @@ function FoodReciprDetail() {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData()
   }, []);
 
   return (
-    <div className="mx-10 mt-8">
-      <div className={styles.breakcrumb}>
+     <div className="mx-10 mt-8">
+      <div className="ml-8">
         <BreakCrumbs />
       </div>
-      <div className={styles.foodRecipeDetail}>
+      { Object.keys(dataRes).length !== 0 && (
+      <>
+      <div className="flex">
         <div className={styles.foodImage}>
           <img
-            src="https://beptruong.edu.vn/wp-content/uploads/2019/12/ca-kho-to-mien-nam.jpg"
+            src={dataRes?.images[0]?.url}
             alt="Mon an"
           ></img>
         </div>
         <div className={styles.foodRecipe}>
-          <p className={styles.text}>Cá Trắm Kho Tộ </p>
+          <p className={styles.text}>{dataRes?.name}</p>
           <div style={{ marginLeft: "50px" }}>
             <div className="flex items-center">
               <svg
@@ -169,24 +109,24 @@ function FoodReciprDetail() {
               <p style={{ display: "flex", fontSize: "28px", fontWeight: 500 }}>
                 Thành Phần
               </p>
-              {foodIngredient.map((result) => (
-                <div className={styles.ingredient}>
+              {dataRes?.ingredients.map((result, index = 0) => (
+                <div className={styles.ingredient} key={index++}>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <p style={{ display: "flex", fontSize: "18px" }}>
-                      {result.name}{" "}
+                      {result?.ingredient?.name}{" "}
                     </p>
                     <p style={{ display: "flex", fontSize: "16px" }}>
-                      Số Lượng: {result.count}
+                      Số Lượng: {result?.value}
                     </p>
                   </div>
                   <div className={styles.ingredientImage}>
-                    <img src={result.imageURL} alt="nguyen lieu" />
+                    <img src='https://cdn.tgdd.vn/2020/12/content/11-800x500-5.jpg' alt="nguyen lieu" />
                   </div>
                 </div>
               ))}
-              <p style={{ fontSize: "14px", color: "blue", cursor: "pointer" }}>
+              {dataRes?.ingredients.length > 4 && <p style={{ fontSize: "14px", color: "blue", cursor: "pointer" }}>
                 Xem Thêm{" "}
-              </p>
+              </p>}
               <div className={styles.shareAndComment}>
                 <div className={styles.icon}>
                   <a href="https://www.facebook.com">
@@ -229,17 +169,25 @@ function FoodReciprDetail() {
       <div className={styles.foodDescription}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div className={styles.title}>
-            <p className={styles.titleText}>Mô tả </p>
-            <p className={styles.titleText}>Video hướng dẫn </p>
-            <p className={styles.titleText}>Cách bảo quản thực phẩm</p>
+            <p className={styles.titleText} onClick={()=> setClick(0)} style={{color : (click === 0) ? 'red': 'black'}}>Mô tả </p>
+            <p className={styles.titleText} onClick={()=> setClick(1)} style={{color : (click === 1) ? 'red': 'black'}}>Video hướng dẫn </p>
+            <p className={styles.titleText} onClick={()=> setClick(2)} style={{color : (click === 2) ? 'red': 'black'}}>Cách bảo quản thực phẩm</p>
           </div>
-          <div className={styles.description}>
-            <p>Sản phẩm hiện tại đang không có dữ liệu về món ăn này</p>
-          </div>
+         {click === 0 && <div className={styles.description}>
+            {dataRes?.steps.split("\n").map((line,index = 0) => (
+              <p key={index++} className="text-left">{line}</p>
+            ))}
+          </div>}
+          {click === 1 &&<div className={styles.description}>
+            <video width='100%' height='100%' src={dataRes.video} controls autoPlay/>
+          </div>}
+          { click === 2  && <div className={styles.description}>
+            <p>Sản phẩm hiện tại đang không có dữ liệu về món ăn này2</p>
+          </div>}
         </div>
         <div className={styles.moreImage}>
-          {moreImage.map((result) => (
-            <img src={result.imageURL} alt="hinh anh"></img>
+          { dataRes?.images.map((result) => (
+            <img src={result.url} alt="hinh anh" key={result.id}></img>
           ))}
         </div>
       </div>
@@ -248,19 +196,20 @@ function FoodReciprDetail() {
           Các sản phẩm tương tự{" "}
         </p>
         <div className={styles.foodSimilarImage}>
-          {moreSimilarFood.map((result) => (
-            <div className={styles.similarFoodTitle}>
-              <img src={result.imageURL} alt="hinh anh" />
+          {dataRes?.recommendedFoods.map((result) => (
+            <div className={styles.similarFoodTitle} key={result.id}>
+              <img src={result.image} alt="hinh anh" />
               <p style={{ flex: 1, fontSize: "18px", marginTop: "20px" }}>
                 {result.name}
               </p>
             </div>
           ))}
         </div>
-        <button className={styles.moreProduct}>Xem Thêm </button>
+       {dataRes?.recommendedFoods > 4 && <button className={styles.moreProduct}>Xem Thêm </button>}
       </div>
+      </>)}
     </div>
   );
 }
 
-export default FoodReciprDetail;
+export default FoodRecipeDetail;
