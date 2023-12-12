@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
 import Loading from "../../components/homepage/Loading";
 import { useNavigate } from "react-router-dom";
+import YouTube from "react-youtube";
 
 function FoodRecipeDetail() {
   const [dataRes, setDataRes] = useState({});
@@ -101,6 +102,24 @@ function FoodRecipeDetail() {
     fetchData();
   }, []);
 
+  // Extract video ID from the YouTube URL
+  const getYouTubeID = (url) => {
+    const match = url?.match(/[?&]v=([^?&]+)/);
+    return match ? match[1] : null;
+  };
+
+  // Get the video ID
+  const videoId = getYouTubeID(dataRes?.video);
+
+  // Options for the YouTube player
+  const opts = {
+    height: "300",
+    width: "500",
+    playerVars: {
+      autoplay: 0,
+    },
+  };
+
   return loadingFoodRecipeTop ? (
     <Loading />
   ) : (
@@ -193,7 +212,10 @@ function FoodRecipeDetail() {
                     <div className={styles.ingredient} key={index++}>
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <p style={{ display: "flex", fontSize: "18px" }}>
-                          {result?.ingredient?.name}{" "}
+                          {result?.ingredient?.name &&
+                            capitalizeFirstLetter(
+                              result?.ingredient?.name
+                            )}{" "}
                         </p>
                         <p style={{ display: "flex", fontSize: "16px" }}>
                           Số Lượng: {result?.value}
@@ -265,7 +287,7 @@ function FoodRecipeDetail() {
                   className={
                     styles.titleText +
                     (click === 0
-                      ? " font-black opacity-100 border-b-black"
+                      ? " font-bold text-black opacity-100 border-b-black"
                       : "")
                   }
                 >
@@ -276,7 +298,7 @@ function FoodRecipeDetail() {
                   className={
                     styles.titleText +
                     (click === 1
-                      ? " font-black opacity-100 border-b-black"
+                      ? " font-bold text-black opacity-100 border-b-black"
                       : "")
                   }
                 >
@@ -287,7 +309,7 @@ function FoodRecipeDetail() {
                   className={
                     styles.titleText +
                     (click === 2
-                      ? " font-black opacity-100 border-b-black"
+                      ? " font-bold text-black opacity-100 border-b-black"
                       : "")
                   }
                 >
@@ -304,19 +326,17 @@ function FoodRecipeDetail() {
                 </div>
               )}
               {click === 1 && (
-                <div className={styles.description}>
-                  <video
-                    width="100%"
-                    height="100%"
-                    src={dataRes.video}
-                    controls
-                    autoPlay
-                  />
+                <div className={styles.video}>
+                  {videoId ? (
+                    <YouTube videoId={videoId} opts={opts} />
+                  ) : (
+                    <p>Sản phẩm hiện tại đang không có video hướng dẫn</p>
+                  )}
                 </div>
               )}
               {click === 2 && (
                 <div className={styles.description}>
-                  <p>Sản phẩm hiện tại đang không có dữ liệu về món ăn này2</p>
+                  <p>Sản phẩm hiện tại đang không có dữ liệu về món ăn này</p>
                 </div>
               )}
             </div>
@@ -327,9 +347,9 @@ function FoodRecipeDetail() {
             </div>
           </div>
           <div className={styles.foodSimilar}>
-            <p style={{ fontSize: "32px", fontWeight: "500" }}>
-              Các sản phẩm tương tự{" "}
-            </p>
+            <h1 className="text-center font-bold text-3xl text-gray-800 pb-2 my-2">
+              Các công thức nổi bật
+            </h1>
             <div className="grid grid-cols-4 gap-4 my-10 bg-slate-200  p-8 rounded-lg shadow-md">
               {foodRecipeTop?.map((food, index) => renderFoodCard(food, index))}
             </div>
