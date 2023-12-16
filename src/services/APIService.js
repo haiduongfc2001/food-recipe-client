@@ -40,3 +40,27 @@ export const getFoodRecipeDetail = async ({ id }) => {
     return extractErrorInfo(error);
   }
 };
+
+export const getFoodRecipeTop = async () => {
+  try {
+    const res = await CommonService.get("/get-ramdom-food", {}, {});
+
+    return res;
+  } catch (error) {
+    return extractErrorInfo(error);
+  }
+};
+
+export const createNewRecipe = async (formDataToSend) => {
+  try {
+    const res = await CommonService.post(
+      "/food/create-food",
+      formDataToSend,
+      {}
+    );
+
+    return res;
+  } catch (error) {
+    return extractErrorInfo(error);
+  }
+};

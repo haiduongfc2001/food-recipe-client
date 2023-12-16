@@ -21,4 +21,6 @@ export const REACT_APP_BASE_URL = "http://localhost:5000";
 export const API_SERVICE = {
   SEARCH: "search",
   GET_FOOD_RECIPE_DETAIL: "getFoodRecipeDetail",
+  GET_FOOD_RECIPE_TOP: "getFoodRecipeTop",
+  CREATE_NEW_RECIPE: "createNewRecipe",
 };

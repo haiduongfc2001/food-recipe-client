@@ -1,5 +1,5 @@
 import styles from "./FoodRecipeDetail.module.css";
-import BreakCrumbs from "./BreakCrumbs";
+import BreadCrumbs from "./BreadCrumbs";
 import { Link } from "react-router-dom";
 import * as APIService from "../../services/APIService";
 import { API_SERVICE, STATUS_CODE } from "../../utils/Constants";
@@ -8,6 +8,7 @@ import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
 import Loading from "../../components/homepage/Loading";
 import { useNavigate } from "react-router-dom";
 import YouTube from "react-youtube";
+import defaultImage from "../../assets/1377194.png";
 
 function FoodRecipeDetail() {
   const [dataRes, setDataRes] = useState({});
@@ -126,13 +127,16 @@ function FoodRecipeDetail() {
     <div className="mx-10 mt-8">
       <div id="top"></div>
       <div className="ml-8">
-        <BreakCrumbs dataRes={Object.keys(dataRes).length !== 0 && dataRes} />
+        <BreadCrumbs dataRes={Object.keys(dataRes).length !== 0 && dataRes} />
       </div>
       {Object.keys(dataRes).length !== 0 && (
         <>
           <div className="flex mr-3 my-8 ml-8">
             <div className={styles.foodImage}>
-              <img src={dataRes?.images[0]?.url} alt="Mon an"></img>
+              <img
+                src={dataRes?.images[0]?.url ?? defaultImage}
+                alt={dataRes?.name ?? "image"}
+              />
             </div>
             <div className={styles.foodRecipe}>
               <p className={styles.text}>
