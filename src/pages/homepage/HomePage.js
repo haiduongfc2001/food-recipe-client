@@ -86,12 +86,10 @@ function Homepage() {
   const fetchFoodRecipeTop = async () => {
     try {
       setLoadingFoodRecipeTop(true);
-      const response = await APIService[API_SERVICE.SEARCH]({
-        search: "",
-      });
+      const response = await APIService[API_SERVICE.GET_FOOD_RECIPE_TOP]();
 
       if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
-        setFoodRecipeTop(response.slice(0, 8));
+        setFoodRecipeTop(response);
         setLoadingFoodRecipeTop(false);
       }
     } catch (error) {

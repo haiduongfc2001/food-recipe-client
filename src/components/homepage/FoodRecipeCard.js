@@ -4,6 +4,7 @@ import { StarSVG } from "../Data/StarSVG";
 import { useNavigate } from "react-router-dom";
 import FormatDuration from "../../utils/FormatDuration";
 import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
+import defaultImage from "../../assets/1377194.png";
 
 function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
@@ -60,23 +61,24 @@ function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
     return (
       <div
         key={index}
-        className="relative bg-white rounded-lg overflow-hidden shadow-md flex flex-col"
+        className="relative bg-gray-100 rounded-lg overflow-hidden shadow-md flex flex-col"
         onMouseEnter={() => handleMouseEnter(index)}
         onMouseLeave={() => handleMouseLeave(index)}
       >
         <img
-          src={food.image}
+          src={food?.image || defaultImage}
           alt={food.name}
-          className="w-full h-48 object-cover"
+          className={`w-full h-48 ${
+            food?.image ? "object-cover" : "object-contain"
+          }`}
         />
         <div className="p-4 bg-gray-100 flex flex-col justify-between">
           <div className="flex-grow">
             <h3 className="text-lg font-semibold">
               {capitalizeFirstLetter(food.name)}
             </h3>
-            <h4 className="text-md text-gray-500">{food.description}</h4>
           </div>
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between mt-4 text-sm">
             <div>Thời gian: {FormatDuration(food.cooking_time)}</div>
             <div className="flex items-center">
               <span className="text-yellow-500 pr-1">{food.rating}</span>

@@ -1,0 +1,15 @@
+export const MethodData = [
+  { name: "Xào" },
+  { name: "Hấp" },
+  { name: "Luộc" },
+  { name: "Nướng" },
+  { name: "Quay" },
+  { name: "Rán/ Chiên" },
+  { name: "Rang" },
+  { name: "Om/ Kho/ Rim" },
+  { name: "Chần" },
+  { name: "Ninh/ Hầm" },
+  { name: "Trộn" },
+  { name: "Áp chảo" },
+  { name: "Muối chua" },
+].map((method, index) => ({ id: index + 1, ...method }));

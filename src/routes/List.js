@@ -1,3 +1,4 @@
+import CreateNewRecipe from "../pages/create-new-recipe/CreateNewRecipe";
 import FoodRecipeDetail from "../pages/food-recipe-detail/FoodRecipeDetail";
 import Homepage from "../pages/homepage/HomePage";
 
@@ -12,6 +13,10 @@ export const routeList = [
       {
         path: "food-recipe-detail",
         element: <FoodRecipeDetail />,
+      },
+      {
+        path: "create-new-recipe",
+        element: <CreateNewRecipe />,
       },
     ],
   },
