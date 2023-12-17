@@ -277,7 +277,9 @@ function FoodRecipeDetail() {
                         </svg>
                       </a>
                     </div>
+                    <Link to='/food-recipe-comment'>
                     <div className={styles.reviews}>Đánh giá món ăn</div>
+                    </Link>
                   </div>
                 </div>
               </div>
