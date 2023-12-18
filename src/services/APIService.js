@@ -1,5 +1,6 @@
 import { extractErrorInfo } from "./ExtractErrorInfo";
 import * as CommonService from "./CommonService";
+import { TOKEN } from "../utils/Constants";
 
 export const search = async ({
   search,
@@ -57,6 +58,24 @@ export const createNewRecipe = async (formDataToSend) => {
       "/food/create-food",
       formDataToSend,
       {}
+    );
+
+    return res;
+  } catch (error) {
+    return extractErrorInfo(error);
+  }
+};
+
+export const postReview = async ({ food_id, rating, review }) => {
+  try {
+    const res = await CommonService.post(
+      "/review",
+      { food_id, rating, review },
+      {
+        headers: {
+          Authorization: "Bearer " + TOKEN,
+        },
+      }
     );
 
     return res;

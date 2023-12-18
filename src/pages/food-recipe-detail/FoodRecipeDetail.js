@@ -1,14 +1,19 @@
 import styles from "./FoodRecipeDetail.module.css";
 import BreadCrumbs from "./BreadCrumbs";
-import { Link } from "react-router-dom";
 import * as APIService from "../../services/APIService";
-import { API_SERVICE, STATUS_CODE } from "../../utils/Constants";
+import { API_SERVICE, STATUS_CODE, TOKEN } from "../../utils/Constants";
 import { useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
 import Loading from "../../components/homepage/Loading";
 import { useNavigate } from "react-router-dom";
 import YouTube from "react-youtube";
 import defaultImage from "../../assets/1377194.png";
+import { StarIcon } from "../food-recipe-comment/StarIcon";
+import ReactStars from "react-rating-stars-component";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DecodeToken from "../../routes/DecodeToken";
+import personImage from "../../assets/person.webp";
 
 function FoodRecipeDetail() {
   const [dataRes, setDataRes] = useState({});
@@ -18,6 +23,22 @@ function FoodRecipeDetail() {
   const [showDetails, setShowDetails] = useState(
     Array(foodRecipeTop.length).fill(false)
   );
+
+  const [showReview, setShowReview] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("");
+
+  const handleShowReview = () => {
+    setShowReview((prevShowReview) => !prevShowReview);
+  };
+
+  const handleRateChange = (newRating) => {
+    setRating(newRating);
+  };
+
+  const handleReviewChange = (e) => {
+    setReview(e.target.value);
+  };
 
   const navigate = useNavigate();
 
@@ -43,6 +64,8 @@ function FoodRecipeDetail() {
     };
 
     const handleNavigate = (foodRecipeID) => {
+      setShowReview((prevShowReview) => !prevShowReview);
+
       const url = `/food-recipe-detail?id=${foodRecipeID}`;
       navigate(url);
 
@@ -59,7 +82,7 @@ function FoodRecipeDetail() {
         onMouseLeave={() => handleMouseLeave(index)}
       >
         <img
-          src={food.image}
+          src={food?.image || defaultImage}
           alt={food.name}
           className="w-full h-48 object-cover"
         />
@@ -99,10 +122,6 @@ function FoodRecipeDetail() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   // Extract video ID from the YouTube URL
   const getYouTubeID = (url) => {
     const match = url?.match(/[?&]v=([^?&]+)/);
@@ -120,6 +139,50 @@ function FoodRecipeDetail() {
       autoplay: 0,
     },
   };
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+
+    if (review.trim() === "") {
+      alert("Bạn chưa bình luận");
+      return;
+    }
+
+    if (rating === 0) {
+      alert("Bạn chưa đánh giá");
+      return;
+    }
+
+    const response = await APIService[API_SERVICE.POST_REVIEW]({
+      food_id: currentFoodRecipeID,
+      rating: rating,
+      review: review.trim(),
+    });
+
+    if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
+      toast.success("Đánh giá thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      setReview("");
+      setRating(0);
+
+      setTimeout(() => {
+        fetchData();
+      }, 2000);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentFoodRecipeID]);
 
   return loadingFoodRecipeTop ? (
     <Loading />
@@ -144,57 +207,25 @@ function FoodRecipeDetail() {
               </p>
               <div style={{ marginLeft: "50px" }}>
                 <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-yellow-300 me-1"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                  </svg>
-                  <svg
-                    className="w-4 h-4 text-yellow-300 me-1"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                  </svg>
-                  <svg
-                    className="w-4 h-4 text-yellow-300 me-1"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                  </svg>
-                  <svg
-                    className="w-4 h-4 text-yellow-300 me-1"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                  </svg>
-                  <svg
-                    className="w-4 h-4 text-gray-300 me-1 dark:text-gray-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                  </svg>
-                  <Link to="/comment">
-                    <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-500">
-                      {" "}
-                      | 5 Khách hàng đã bình luận{" "}
-                    </p>
-                  </Link>
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <StarIcon
+                      key={index}
+                      className="mr-1 cursor-pointer"
+                      height="16"
+                      width="18"
+                      fill={
+                        index < Math.round(dataRes.rating)
+                          ? "rgb(253 224 71)"
+                          : "gray"
+                      }
+                    />
+                  ))}
+                  <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-500">
+                    |{" "}
+                    {dataRes?.reviews?.length
+                      ? `${dataRes?.reviews?.length} đánh giá`
+                      : "Chưa có bình đánh giá"}
+                  </p>
                 </div>
                 <div
                   style={{
@@ -212,8 +243,8 @@ function FoodRecipeDetail() {
                   >
                     Thành Phần
                   </p>
-                  {dataRes?.ingredients.map((result, index = 0) => (
-                    <div className={styles.ingredient} key={index++}>
+                  {dataRes?.ingredients.map((result, index) => (
+                    <div className={styles.ingredient} key={index}>
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <p style={{ display: "flex", fontSize: "18px" }}>
                           {result?.ingredient?.name &&
@@ -277,81 +308,199 @@ function FoodRecipeDetail() {
                         </svg>
                       </a>
                     </div>
-                    <Link to='/food-recipe-comment'>
-                    <div className={styles.reviews}>Đánh giá món ăn</div>
-                    </Link>
+                    <div className={styles.reviews} onClick={handleShowReview}>
+                      {!showReview ? "Đánh giá món ăn" : "Mô tả món ăn"}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className={styles.foodDescription}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div className={styles.title}>
-                <p
-                  onClick={() => setClick(0)}
-                  className={
-                    styles.titleText +
-                    (click === 0
-                      ? " font-bold text-black opacity-100 border-b-black"
-                      : "")
-                  }
-                >
-                  Mô tả{" "}
-                </p>
-                <p
-                  onClick={() => setClick(1)}
-                  className={
-                    styles.titleText +
-                    (click === 1
-                      ? " font-bold text-black opacity-100 border-b-black"
-                      : "")
-                  }
-                >
-                  Video hướng dẫn{" "}
-                </p>
-                <p
-                  onClick={() => setClick(2)}
-                  className={
-                    styles.titleText +
-                    (click === 2
-                      ? " font-bold text-black opacity-100 border-b-black"
-                      : "")
-                  }
-                >
-                  Cách bảo quản thực phẩm
-                </p>
-              </div>
-              {click === 0 && (
-                <div className={styles.description}>
-                  {dataRes?.steps.split("\n").map((line, index = 0) => (
-                    <p key={index++} className="text-left">
-                      {line}
-                    </p>
-                  ))}
+          {!showReview ? (
+            <div className={styles.foodDescription}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div className={styles.title}>
+                  <p
+                    onClick={() => setClick(0)}
+                    className={
+                      styles.titleText +
+                      (click === 0
+                        ? " font-bold text-black opacity-100 border-b-black"
+                        : "")
+                    }
+                  >
+                    Mô tả{" "}
+                  </p>
+                  <p
+                    onClick={() => setClick(1)}
+                    className={
+                      styles.titleText +
+                      (click === 1
+                        ? " font-bold text-black opacity-100 border-b-black"
+                        : "")
+                    }
+                  >
+                    Video hướng dẫn{" "}
+                  </p>
+                  <p
+                    onClick={() => setClick(2)}
+                    className={
+                      styles.titleText +
+                      (click === 2
+                        ? " font-bold text-black opacity-100 border-b-black"
+                        : "")
+                    }
+                  >
+                    Cách bảo quản thực phẩm
+                  </p>
                 </div>
-              )}
-              {click === 1 && (
-                <div className={styles.video}>
-                  {videoId ? (
-                    <YouTube videoId={videoId} opts={opts} />
+                {click === 0 && (
+                  <div
+                    className={
+                      styles.description +
+                      " border-4 border-solid rounded-md border-gray-300 focus:outline-none focus:border-blue-500"
+                    }
+                  >
+                    {dataRes?.steps.split("\n").map((line, index) => (
+                      <p key={index} className="text-left ">
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                )}
+                {click === 1 && (
+                  <div className={styles.video}>
+                    {videoId ? (
+                      <YouTube videoId={videoId} opts={opts} />
+                    ) : (
+                      <p>Sản phẩm hiện tại đang không có video hướng dẫn</p>
+                    )}
+                  </div>
+                )}
+                {click === 2 && (
+                  <div className={styles.description}>
+                    <p>Sản phẩm hiện tại đang không có dữ liệu về món ăn này</p>
+                  </div>
+                )}
+              </div>
+              <div className={styles.moreImage}>
+                {dataRes?.images.map((result) => (
+                  <img src={result.url} alt="hinh anh" key={result.id}></img>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="mx-10">
+              <div className={styles.foodDescriptionReview}>
+                {!dataRes.reviews.some(
+                  (review) =>
+                    review.user?.user_name === DecodeToken(TOKEN).user_name
+                ) && (
+                  <form className="bg-slate-100 rounded-lg w-full h-72">
+                    <div className="flex flex-col -mx-3 mb-3">
+                      <h2 className="mx-5 px-4 pt-4 pb-3 text-gray-800 text-xl text-left ">
+                        Chia sẻ cảm xúc của bạn về món ăn
+                      </h2>
+                      <div className="h-36 w-auto px-5 mb-2 mt-2 mx-5 ">
+                        <textarea
+                          className="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-full py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
+                          placeholder="Nhập bình luận của bạn tại đây..."
+                          name="review"
+                          value={review}
+                          onChange={handleReviewChange}
+                          required
+                        ></textarea>
+                      </div>
+                      <div className="flex items-center justify-end mr-14 mt-5">
+                        <div className="flex items-center justify-between mr-20">
+                          <p className="text-lg mr-4">Đánh giá sao: </p>
+                          {/* Star rating  */}
+                          <ReactStars
+                            count={5}
+                            value={rating}
+                            onChange={handleRateChange}
+                            size={28}
+                            activeColor="rgb(253 224 71)"
+                          />
+                        </div>
+                        <div
+                          className="cursor-pointer ml-6"
+                          onClick={handleReviewSubmit}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="dodgerblue"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="black"
+                            className="w-7 h-7"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                )}
+              </div>
+              <div className={styles.userComment}>
+                <p className="text-4xl text-left">Bình luận của người dùng</p>
+                <div className="my-8 mx-12">
+                  {dataRes?.reviews?.length ? (
+                    dataRes.reviews.map((review) => (
+                      <div className="flex mb-7" key={review.id}>
+                        <img
+                          src={review.user?.avatar || personImage}
+                          alt="avatar"
+                          className="h-14 w-14 object-cover rounded-full"
+                        />
+                        <div className="flex flex-col ml-5 pr-10 pl-4 py-4 rounded-3xl bg-slate-200 w-auto">
+                          <div className="flex items-center">
+                            <p className="text-[28px] text-left font-bold">
+                              {review?.user?.user_name} &nbsp;&nbsp;
+                            </p>
+                            <p className="text-[20px]">
+                              {dataRes.reviews.some(
+                                (review) =>
+                                  review.user?.user_name ===
+                                  DecodeToken(TOKEN).user_name
+                              ) && "(Bạn)"}
+                            </p>
+                          </div>
+                          <div className="flex items-center mt-2">
+                            {Array.from({ length: 5 }, (_, index) => (
+                              <StarIcon
+                                key={index}
+                                className="mr-1 cursor-pointer"
+                                height="16"
+                                width="18"
+                                fill={
+                                  index < review.rating
+                                    ? "rgb(253 224 71)"
+                                    : "gray"
+                                }
+                              />
+                            ))}
+                          </div>
+                          <p className="font-sans text-base text-left mt-4">
+                            {review.review}
+                          </p>
+                        </div>
+                      </div>
+                    ))
                   ) : (
-                    <p>Sản phẩm hiện tại đang không có video hướng dẫn</p>
+                    <h2 className="text-center font-bold text-2xl text-gray-800 pb-2 my-2">
+                      Chưa có đánh giá nào 😢
+                    </h2>
                   )}
                 </div>
-              )}
-              {click === 2 && (
-                <div className={styles.description}>
-                  <p>Sản phẩm hiện tại đang không có dữ liệu về món ăn này</p>
-                </div>
-              )}
+              </div>
             </div>
-            <div className={styles.moreImage}>
-              {dataRes?.images.map((result) => (
-                <img src={result.url} alt="hinh anh" key={result.id}></img>
-              ))}
-            </div>
-          </div>
+          )}
           <div className={styles.foodSimilar}>
             <h1 className="text-center font-bold text-3xl text-gray-800 pb-2 my-2">
               Các công thức nổi bật
@@ -363,6 +512,7 @@ function FoodRecipeDetail() {
           </div>
         </>
       )}
+      <ToastContainer />
     </div>
   );
 }
