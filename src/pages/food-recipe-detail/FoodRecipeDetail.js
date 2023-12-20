@@ -7,7 +7,7 @@ import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
 import Loading from "../../components/homepage/Loading";
 import { useNavigate } from "react-router-dom";
 import YouTube from "react-youtube";
-import defaultImage from "../../assets/1377194.png";
+import defaultImage from "../../assets/food-placeholder.jpg";
 import { StarIcon } from "../food-recipe-comment/StarIcon";
 import ReactStars from "react-rating-stars-component";
 import { ToastContainer, toast } from "react-toastify";
@@ -224,7 +224,7 @@ function FoodRecipeDetail() {
                     |{" "}
                     {dataRes?.reviews?.length
                       ? `${dataRes?.reviews?.length} đánh giá`
-                      : "Chưa có bình đánh giá"}
+                      : "Chưa có đánh giá"}
                   </p>
                 </div>
                 <div
@@ -394,7 +394,7 @@ function FoodRecipeDetail() {
               <div className={styles.foodDescriptionReview}>
                 {!dataRes.reviews.some(
                   (review) =>
-                    review.user?.user_name === DecodeToken(TOKEN).user_name
+                    review.user?.username === DecodeToken(TOKEN).username
                 ) && (
                   <form className="bg-slate-100 rounded-lg w-full h-72">
                     <div className="flex flex-col -mx-3 mb-3">
@@ -461,13 +461,13 @@ function FoodRecipeDetail() {
                         <div className="flex flex-col ml-5 pr-10 pl-4 py-4 rounded-3xl bg-slate-200 w-auto">
                           <div className="flex items-center">
                             <p className="text-[28px] text-left font-bold">
-                              {review?.user?.user_name} &nbsp;&nbsp;
+                              {review?.user?.username} &nbsp;&nbsp;
                             </p>
                             <p className="text-[20px]">
                               {dataRes.reviews.some(
                                 (review) =>
-                                  review.user?.user_name ===
-                                  DecodeToken(TOKEN).user_name
+                                  review.user?.username ===
+                                  DecodeToken(TOKEN).username
                               ) && "(Bạn)"}
                             </p>
                           </div>

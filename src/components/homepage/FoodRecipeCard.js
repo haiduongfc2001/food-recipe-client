@@ -4,7 +4,7 @@ import { StarSVG } from "../Data/StarSVG";
 import { useNavigate } from "react-router-dom";
 import FormatDuration from "../../utils/FormatDuration";
 import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
-import defaultImage from "../../assets/1377194.png";
+import defaultImage from "../../assets/food-placeholder.jpg";
 
 function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);

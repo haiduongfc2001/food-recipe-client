@@ -83,3 +83,19 @@ export const postReview = async ({ food_id, rating, review }) => {
     return extractErrorInfo(error);
   }
 };
+
+export const userLogin = async ({ username, password }) => {
+  try {
+    const res = await CommonService.post(
+      "/user/login",
+      {
+        username,
+        password,
+      },
+      {}
+    );
+    return res;
+  } catch (error) {
+    return extractErrorInfo(error);
+  }
+};

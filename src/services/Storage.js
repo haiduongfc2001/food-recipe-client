@@ -1,5 +1,8 @@
 class Storage {
   // getItem
+  getLocalFoodRecipeToken() {
+    return localStorage.getItem("foodRecipeToken");
+  }
   getSessionFoodSearch = () => {
     const storedData = sessionStorage.getItem("foodSearch");
     return storedData ? JSON.parse(storedData) : [];
@@ -10,6 +13,9 @@ class Storage {
   };
 
   // setItem
+  updateLocalFoodRecipeToken(foodRecipeToken) {
+    localStorage.setItem("foodRecipeToken", foodRecipeToken);
+  }
   updateSessionFoodSearch = (foodSearch) => {
     sessionStorage.setItem("foodSearch", JSON.stringify(foodSearch));
   };
@@ -18,6 +24,9 @@ class Storage {
   };
 
   // removeItem
+  removeFoodRecipeToken() {
+    localStorage.removeItem("foodRecipeToken");
+  }
   removeSessionFoodSearch() {
     sessionStorage.removeItem("foodSearch");
   }
@@ -26,6 +35,7 @@ class Storage {
   }
 
   clearLocal() {
+    this.removeFoodRecipeToken();
     this.removeSessionFoodSearch();
     this.removeSessionInputValue();
   }

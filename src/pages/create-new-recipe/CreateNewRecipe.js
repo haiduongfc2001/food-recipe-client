@@ -313,24 +313,24 @@ function CreateNewRecipe() {
                   Cho
                 </span>
                 <div className="flex items-center mx-4 space-x-2 border border-gray-300 rounded-md overflow-hidden">
-                  <button
+                  {/* <button
                     className="bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring focus:border-blue-300 p-2"
                     disabled
                   >
                     <FontAwesomeIcon icon={faMinus} className="text-gray-600" />
-                  </button>
+                  </button> */}
                   <input
                     type="text"
                     value={1}
-                    className="w-12 text-center p-2"
+                    className="w-12 text-center p-2 bg-gray-200"
                     readOnly
                   />
-                  <button
+                  {/* <button
                     className="bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring focus:border-blue-300 p-2"
                     disabled
                   >
                     <FontAwesomeIcon icon={faPlus} className="text-gray-600" />
-                  </button>
+                  </button> */}
                 </div>
                 <span className="text-md text-gray-900 font-bold text-[16px]">
                   người
