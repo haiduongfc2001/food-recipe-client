@@ -1,4 +1,8 @@
-import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faRightToBracket,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -9,6 +13,7 @@ import { UserSVG } from "../../components/Data/UserSVG";
 import { useNavigate } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import DecodeToken from "../../routes/DecodeToken";
 
 const Header = () => {
   const [inputValue, setInputValue] = useState("");
@@ -105,7 +110,28 @@ const Header = () => {
               </div>
             </Tippy>
           </div>
-          <UserSVG />
+          {storageInstance.getLocalFoodRecipeToken() ? (
+            <div className="flex items-center bg-gray-200 px-4 rounded-lg">
+              <p className="text-black font-bold mr-4">
+                Xin chào,{" "}
+                {
+                  DecodeToken(storageInstance.getLocalFoodRecipeToken())
+                    .username
+                }
+              </p>
+              <UserSVG className="w-6 h-6" />
+            </div>
+          ) : (
+            <Link to="/login">
+              <button className="w-full flex items-center justify-center p-3 bg-blue-200 text-white rounded-md hover:bg-blue-300 focus:outline-none">
+                <p className="text-black font-bold pr-2">Đăng nhập</p>
+                <FontAwesomeIcon
+                  icon={faRightToBracket}
+                  style={{ color: "#000000" }}
+                />
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </header>

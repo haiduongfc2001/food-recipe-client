@@ -7,7 +7,7 @@ export const NOT_FOUND_RESULT_FOR_SEARCH =
   "Chúng tôi không thể tìm thấy bất kỳ kết quả nào cho tìm kiếm của bạn.";
 export const LOADING_DATA = "Đang tải...";
 export const TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhIiwiaWQiOjEsImlhdCI6MTcwMjczNDUxOH0.LjXe6lHzcAJB_lXxnZeQZmQCibKAINr3WUajViNrTyo";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImEiLCJpZCI6MSwiaWF0IjoxNzAyOTY1OTY1fQ.7S19YeWlLBISvlKU-oY0K6MadwT5Gt6ufDXjoj2ZY5Y";
 export const STATUS_CODE = {
   OK: 200,
   CREATED: 201,
@@ -25,4 +25,5 @@ export const API_SERVICE = {
   GET_FOOD_RECIPE_TOP: "getFoodRecipeTop",
   CREATE_NEW_RECIPE: "createNewRecipe",
   POST_REVIEW: "postReview",
+  USER_LOGIN: "userLogin",
 };
