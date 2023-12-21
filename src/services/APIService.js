@@ -26,7 +26,7 @@ export const search = async ({
       {}
     );
 
-    return res;
+    return res.data;
   } catch (error) {
     return extractErrorInfo(error);
   }
@@ -60,7 +60,7 @@ export const createNewRecipe = async (formDataToSend) => {
       {}
     );
 
-    return res;
+    return res.data;
   } catch (error) {
     return extractErrorInfo(error);
   }
@@ -78,7 +78,7 @@ export const postReview = async ({ food_id, rating, review }) => {
       }
     );
 
-    return res;
+    return res.data;
   } catch (error) {
     return extractErrorInfo(error);
   }
@@ -88,6 +88,22 @@ export const userLogin = async ({ username, password }) => {
   try {
     const res = await CommonService.post(
       "/user/login",
+      {
+        username,
+        password,
+      },
+      {}
+    );
+    return res.data;
+  } catch (error) {
+    return extractErrorInfo(error);
+  }
+};
+
+export const userRegister = async ({ username, password }) => {
+  try {
+    const res = await CommonService.post(
+      "/user/register",
       {
         username,
         password,

@@ -74,7 +74,7 @@ const Header = () => {
         </Link>
 
         <div className="flex items-center">
-          <div className="ml-4 relative rounded-lg border-2 border-gray-300 focus:outline-none focus:ring focus:border-blue-300 transition-all duration-300 ease-in-out">
+          <div className="ml-4 relative rounded-lg border-2 border-solid border-gray-400 focus:outline-none focus:ring focus:border-blue-300 transition-all duration-300 ease-in-out">
             <input
               ref={inputSearchRef}
               type="text"

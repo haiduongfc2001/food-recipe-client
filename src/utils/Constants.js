@@ -8,6 +8,10 @@ export const NOT_FOUND_RESULT_FOR_SEARCH =
 export const LOADING_DATA = "Đang tải...";
 export const TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImEiLCJpZCI6MSwiaWF0IjoxNzAyOTY1OTY1fQ.7S19YeWlLBISvlKU-oY0K6MadwT5Gt6ufDXjoj2ZY5Y";
+export const CONFIRM_PWD_VALIDATE = "Mật khẩu và mật khẩu xác nhận không khớp!";
+export const PWD_VALIDATE =
+  "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường và số!";
+
 export const STATUS_CODE = {
   OK: 200,
   CREATED: 201,
@@ -26,4 +30,5 @@ export const API_SERVICE = {
   CREATE_NEW_RECIPE: "createNewRecipe",
   POST_REVIEW: "postReview",
   USER_LOGIN: "userLogin",
+  USER_REGISTER: "userRegister",
 };

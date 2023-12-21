@@ -14,6 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DecodeToken from "../../routes/DecodeToken";
 import personImage from "../../assets/person.webp";
+import { ToastForm } from "../../utils/ToastForm";
 
 function FoodRecipeDetail() {
   const [dataRes, setDataRes] = useState({});
@@ -160,16 +161,7 @@ function FoodRecipeDetail() {
     });
 
     if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
-      toast.success("Đánh giá thành công!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      toast.success("Đánh giá thành công!", ToastForm);
 
       setReview("");
       setRating(0);
