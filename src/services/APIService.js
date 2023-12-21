@@ -54,11 +54,11 @@ export const getFoodRecipeTop = async () => {
 
 export const createNewRecipe = async (formDataToSend) => {
   try {
-    const res = await CommonService.post(
-      "/food/create-food",
-      formDataToSend,
-      {}
-    );
+    const res = await CommonService.post("/food/create-food", formDataToSend, {
+      headers: {
+        Authorization: "Bearer " + TOKEN,
+      },
+    });
 
     return res.data;
   } catch (error) {
