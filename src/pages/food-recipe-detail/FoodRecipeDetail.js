@@ -8,7 +8,7 @@ import Loading from "../../components/homepage/Loading";
 import { useNavigate } from "react-router-dom";
 import YouTube from "react-youtube";
 import defaultImage from "../../assets/food-placeholder.jpg";
-import { StarIcon } from "../food-recipe-comment/StarIcon";
+import { StarIcon} from "../food-recipe-comment/StarIcon";
 import ReactStars from "react-rating-stars-component";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -175,7 +175,6 @@ function FoodRecipeDetail() {
   useEffect(() => {
     fetchData();
   }, [currentFoodRecipeID]);
-
   return loadingFoodRecipeTop ? (
     <Loading />
   ) : (
@@ -199,17 +198,29 @@ function FoodRecipeDetail() {
               </p>
               <div style={{ marginLeft: "50px" }}>
                 <div className="flex items-center">
-                  {Array.from({ length: 5 }, (_, index) => (
+                  {Array.from({ length: Math.floor(dataRes?.rating)}, (_, index) => (
                     <StarIcon
                       key={index}
-                      className="mr-1 cursor-pointer"
-                      height="16"
-                      width="18"
-                      fill={
-                        index < Math.round(dataRes.rating)
-                          ? "rgb(253 224 71)"
-                          : "gray"
-                      }
+                      className="mr-2 cursor-pointer"
+                      height="20"
+                      width="22"
+                      fill="yellow"
+                    />
+                  ))}
+                    <StarIcon
+                      className="mr-2 cursor-pointer"
+                      height="20"
+                      width="22"
+                      fill="yellow"
+                      offset={(dataRes?.rating -  Math.floor(dataRes?.rating))*100 + 5 }
+                    />
+                    {Array.from({ length: 5- Math.floor(dataRes?.rating) - 1}, (_, index) => (
+                    <StarIcon
+                      key={index}
+                      className="mr-2 cursor-pointer"
+                      height="20"
+                      width="22"
+                      fill="gray"
                     />
                   ))}
                   <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-500">
