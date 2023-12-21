@@ -12,6 +12,12 @@ export const CONFIRM_PWD_VALIDATE = "Mật khẩu và mật khẩu xác nhận k
 export const PWD_VALIDATE =
   "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường và số!";
 
+export const REVIEW_WARNING = {
+  CMT_WARNING: "Bạn chưa bình luận!",
+  RATE_WARNING: "Bạn chưa đánh giá!",
+  LOGIN_WARNING: "Bạn cần đăng nhập để đánh giá!",
+};
+
 export const STATUS_CODE = {
   OK: 200,
   CREATED: 201,

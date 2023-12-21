@@ -1,20 +1,27 @@
 import styles from "./FoodRecipeDetail.module.css";
 import BreadCrumbs from "./BreadCrumbs";
 import * as APIService from "../../services/APIService";
-import { API_SERVICE, STATUS_CODE, TOKEN } from "../../utils/Constants";
+import {
+  API_SERVICE,
+  REVIEW_WARNING,
+  STATUS_CODE,
+  TOKEN,
+} from "../../utils/Constants";
 import { useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
 import Loading from "../../components/homepage/Loading";
 import { useNavigate } from "react-router-dom";
 import YouTube from "react-youtube";
 import defaultImage from "../../assets/food-placeholder.jpg";
-import { StarIcon} from "../food-recipe-comment/StarIcon";
+import { StarIcon } from "../food-recipe-comment/StarIcon";
 import ReactStars from "react-rating-stars-component";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DecodeToken from "../../routes/DecodeToken";
 import personImage from "../../assets/person.webp";
 import { ToastForm } from "../../utils/ToastForm";
+import { faLaptopHouse } from "@fortawesome/free-solid-svg-icons";
+import storageInstance from "../../services/Storage";
 
 function FoodRecipeDetail() {
   const [dataRes, setDataRes] = useState({});
@@ -28,6 +35,18 @@ function FoodRecipeDetail() {
   const [showReview, setShowReview] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+
+  const [reviews, setReviews] = useState(dataRes.reviews || []);
+
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   const handleShowReview = () => {
     setShowReview((prevShowReview) => !prevShowReview);
@@ -116,6 +135,7 @@ function FoodRecipeDetail() {
       if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
         setLoadingFoodRecipeTop(false);
         setDataRes(response);
+        setReviews(response.reviews);
         setFoodRecipeTop(response.recommendedFoods.slice(0, 4));
       }
     } catch (error) {
@@ -145,12 +165,17 @@ function FoodRecipeDetail() {
     e.preventDefault();
 
     if (review.trim() === "") {
-      alert("Bạn chưa bình luận");
+      toast.warning(REVIEW_WARNING.CMT_WARNING, ToastForm);
       return;
     }
 
     if (rating === 0) {
-      alert("Bạn chưa đánh giá");
+      toast.warning(REVIEW_WARNING.RATE_WARNING, ToastForm);
+      return;
+    }
+
+    if (!storageInstance.getLocalFoodRecipeToken()) {
+      toast.warning(REVIEW_WARNING.LOGIN_WARNING, ToastForm);
       return;
     }
 
@@ -166,15 +191,16 @@ function FoodRecipeDetail() {
       setReview("");
       setRating(0);
 
-      setTimeout(() => {
-        fetchData();
-      }, 2000);
+      const responseReview = await APIService[api]({ id: currentFoodRecipeID });
+      setReviews(responseReview.reviews);
+      console.log(reviews);
     }
   };
 
   useEffect(() => {
     fetchData();
   }, [currentFoodRecipeID]);
+
   return loadingFoodRecipeTop ? (
     <Loading />
   ) : (
@@ -198,31 +224,39 @@ function FoodRecipeDetail() {
               </p>
               <div style={{ marginLeft: "50px" }}>
                 <div className="flex items-center">
-                  {Array.from({ length: Math.floor(dataRes?.rating)}, (_, index) => (
-                    <StarIcon
-                      key={index}
-                      className="mr-2 cursor-pointer"
-                      height="20"
-                      width="22"
-                      fill="yellow"
-                    />
-                  ))}
-                    <StarIcon
-                      className="mr-2 cursor-pointer"
-                      height="20"
-                      width="22"
-                      fill="yellow"
-                      offset={(dataRes?.rating -  Math.floor(dataRes?.rating))*100 + 5 }
-                    />
-                    {Array.from({ length: 5- Math.floor(dataRes?.rating) - 1}, (_, index) => (
-                    <StarIcon
-                      key={index}
-                      className="mr-2 cursor-pointer"
-                      height="20"
-                      width="22"
-                      fill="gray"
-                    />
-                  ))}
+                  {Array.from(
+                    { length: Math.floor(dataRes?.rating) },
+                    (_, index) => (
+                      <StarIcon
+                        key={index}
+                        className="mr-2 cursor-pointer"
+                        height="20"
+                        width="22"
+                        fill="yellow"
+                      />
+                    )
+                  )}
+                  <StarIcon
+                    className="mr-2 cursor-pointer"
+                    height="20"
+                    width="22"
+                    fill="yellow"
+                    offset={
+                      (dataRes?.rating - Math.floor(dataRes?.rating)) * 100 + 5
+                    }
+                  />
+                  {Array.from(
+                    { length: 5 - Math.floor(dataRes?.rating) - 1 },
+                    (_, index) => (
+                      <StarIcon
+                        key={index}
+                        className="mr-2 cursor-pointer"
+                        height="20"
+                        width="22"
+                        fill="gray"
+                      />
+                    )
+                  )}
                   <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-500">
                     |{" "}
                     {dataRes?.reviews?.length
@@ -395,11 +429,14 @@ function FoodRecipeDetail() {
           ) : (
             <div className="mx-10">
               <div className={styles.foodDescriptionReview}>
-                {!dataRes.reviews.some(
+                {!reviews.some(
                   (review) =>
                     review.user?.username === DecodeToken(TOKEN).username
                 ) && (
-                  <form className="bg-slate-100 rounded-lg w-full h-72">
+                  <form
+                    className="bg-slate-100 rounded-lg w-full h-72"
+                    onSubmit={handleReviewSubmit}
+                  >
                     <div className="flex flex-col -mx-3 mb-3">
                       <h2 className="mx-5 px-4 pt-4 pb-3 text-gray-800 text-xl text-left ">
                         Chia sẻ cảm xúc của bạn về món ăn
@@ -426,24 +463,25 @@ function FoodRecipeDetail() {
                             activeColor="rgb(253 224 71)"
                           />
                         </div>
-                        <div
-                          className="cursor-pointer ml-6"
-                          onClick={handleReviewSubmit}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="dodgerblue"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="black"
-                            className="w-7 h-7"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                            />
-                          </svg>
+                        <div className="cursor-pointer ml-6">
+                          <button type="submit">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill={isHovered ? "dodgerblue" : "gray"}
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="black"
+                              className="w-9 h-9"
+                              onMouseEnter={handleMouseEnter}
+                              onMouseLeave={handleMouseLeave}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                              />
+                            </svg>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -451,10 +489,10 @@ function FoodRecipeDetail() {
                 )}
               </div>
               <div className={styles.userComment}>
-                <p className="text-4xl text-left">Bình luận của người dùng</p>
+                <p className="text-3xl text-left">Bình luận của người dùng</p>
                 <div className="my-8 mx-12">
-                  {dataRes?.reviews?.length ? (
-                    dataRes.reviews.map((review) => (
+                  {reviews.length ? (
+                    reviews.map((review) => (
                       <div className="flex mb-7" key={review.id}>
                         <img
                           src={review.user?.avatar || personImage}
@@ -467,7 +505,7 @@ function FoodRecipeDetail() {
                               {review?.user?.username} &nbsp;&nbsp;
                             </p>
                             <p className="text-[20px]">
-                              {dataRes.reviews.some(
+                              {reviews.some(
                                 (review) =>
                                   review.user?.username ===
                                   DecodeToken(TOKEN).username

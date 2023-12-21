@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -35,6 +35,14 @@ function Login() {
       setMessageError(response?.data?.message);
     }
   };
+
+  //stop going to login page if already had token in local storage
+  useEffect(() => {
+    const isAuth = storageInstance.getLocalFoodRecipeToken();
+    if (isAuth && isAuth !== "undefined") {
+      navigate("/");
+    }
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">

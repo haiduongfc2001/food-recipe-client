@@ -1,11 +1,12 @@
 import {
   faPlus,
+  faRightFromBracket,
   faRightToBracket,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import * as APIService from "../../services/APIService";
 import storageInstance from "../../services/Storage";
 import { API_SERVICE, STATUS_CODE } from "../../utils/Constants";
@@ -17,9 +18,13 @@ import DecodeToken from "../../routes/DecodeToken";
 
 const Header = () => {
   const [inputValue, setInputValue] = useState("");
+  const [showLogoutButton, setShowLogoutButton] = useState(false);
+
   const inputSearchRef = useRef();
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname;
 
   useEffect(() => {
     inputSearchRef.current.focus();
@@ -46,10 +51,10 @@ const Header = () => {
     if (response && response.status !== STATUS_CODE.UNAUTHORIZED) {
       setInputValue("");
       storageInstance.updateSessionFoodSearch(response);
-      if (window.location.pathname === "/") {
+      if (path === "/") {
         window.location.reload();
       } else {
-        window.location.href = "/";
+        navigate("/");
       }
     } else {
       alert("Server error!");
@@ -64,6 +69,26 @@ const Header = () => {
 
   const handleNavigate = () => {
     navigate("/create-new-recipe");
+  };
+
+  const handleLogout = () => {
+    storageInstance.clearLocal();
+    navigate("/login");
+  };
+
+  const handleUserIconMouseEnter = () => {
+    setShowLogoutButton(true);
+  };
+
+  const handleUserIconMouseLeave = (e) => {
+    setTimeout(() => {
+      if (
+        !e.relatedTarget ||
+        !e.relatedTarget.closest(".logout-button-container")
+      ) {
+        setShowLogoutButton(false);
+      }
+    }, 3000);
   };
 
   return (
@@ -93,34 +118,59 @@ const Header = () => {
         </div>
 
         <div className="flex items-center pr-4">
-          <div className="mx-8 relative">
-            <Tippy
-              content="Tạo công thức"
-              placement="top"
-              animation="scale"
-              duration={400}
-            >
-              <div className="relative">
-                <div
-                  className="h-9 w-9 flex items-center justify-center text-black border-2 border-black rounded-full hover:bg-slate-400 cursor-pointer"
-                  onClick={handleNavigate}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </div>
-              </div>
-            </Tippy>
-          </div>
           {storageInstance.getLocalFoodRecipeToken() ? (
-            <div className="flex items-center bg-gray-200 px-4 rounded-lg">
-              <p className="text-black font-bold mr-4">
-                Xin chào,{" "}
-                {
-                  DecodeToken(storageInstance.getLocalFoodRecipeToken())
-                    .username
-                }
-              </p>
-              <UserSVG className="w-6 h-6" />
-            </div>
+            <>
+              <div className="mx-8 relative">
+                <Tippy
+                  content="Tạo công thức"
+                  placement="top"
+                  animation="scale"
+                  duration={400}
+                >
+                  <div className="relative">
+                    <div
+                      className="h-9 w-9 flex items-center justify-center text-black border-2 border-black rounded-full hover:bg-slate-400 cursor-pointer"
+                      onClick={handleNavigate}
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </div>
+                  </div>
+                </Tippy>
+              </div>
+              <div
+                className="flex items-center relative bg-gray-200 px-4 rounded-lg"
+                onMouseEnter={handleUserIconMouseEnter}
+                onMouseLeave={handleUserIconMouseLeave}
+              >
+                <p className="text-black font-bold mr-4 cursor-pointer relative z-10">
+                  Xin chào,{" "}
+                  {
+                    DecodeToken(storageInstance.getLocalFoodRecipeToken())
+                      .username
+                  }
+                </p>
+                <UserSVG
+                  className="w-6 h-6 cursor-pointer"
+                  onMouseEnter={handleUserIconMouseEnter}
+                  onMouseLeave={handleUserIconMouseLeave}
+                />
+
+                {showLogoutButton && (
+                  <div className="absolute right-4 mt-[80px] bg-white rounded-lg shadow-md z-0">
+                    <button
+                      className="w-full flex items-center justify-center p-3 bg-blue-200 text-white rounded-md hover:bg-blue-300 focus:outline-none"
+                      onClick={handleLogout}
+                    >
+                      <p className="text-black font-bold pr-2">Đăng xuất</p>
+                      <FontAwesomeIcon
+                        icon={faRightFromBracket}
+                        style={{ color: "#000000" }}
+                      />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
           ) : (
             <Link to="/login">
               <button className="w-full flex items-center justify-center p-3 bg-blue-200 text-white rounded-md hover:bg-blue-300 focus:outline-none">

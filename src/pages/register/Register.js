@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,6 +14,7 @@ import { ToastForm } from "../../utils/ToastForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { validatePassword } from "../../utils/Regex";
+import storageInstance from "../../services/Storage";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -61,6 +62,14 @@ function Register() {
       //   toast.error(response?.data?.message, ToastForm);
     }
   };
+
+  //stop going to login page if already had token in local storage
+  useEffect(() => {
+    const isAuth = storageInstance.getLocalFoodRecipeToken();
+    if (isAuth && isAuth !== "undefined") {
+      navigate("/");
+    }
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">

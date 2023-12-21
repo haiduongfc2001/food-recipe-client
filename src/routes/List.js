@@ -14,25 +14,27 @@ export const routeList = [
     element: <Homepage />,
     children: [
       {
-        path: "register",
-        element: <Register />,
-      },
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
         path: "food-recipe-detail",
         element: <FoodRecipeDetail />,
       },
-      {
-        path: "create-new-recipe",
-        element: <CreateNewRecipe />,
-      },
-      {
-        path: "food-recipe-comment",
-        element: <FoodRecipeComment />,
-      },
     ],
+  },
+];
+
+export const routeLoginList = [
+  {
+    path: "create-new-recipe",
+    element: <CreateNewRecipe />,
+  },
+];
+
+export const noneLoginRouteList = [
+  {
+    path: "register",
+    element: <Register />,
+  },
+  {
+    path: "login",
+    element: <Login />,
   },
 ];

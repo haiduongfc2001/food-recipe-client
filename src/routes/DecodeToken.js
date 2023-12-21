@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
-import Storage from "../services/Storage";
 import { Navigate } from "react-router-dom";
+import storageInstance from "../services/Storage";
 
 //Decode JWT
 function DecodeToken(token) {
@@ -9,7 +9,7 @@ function DecodeToken(token) {
 
     return decodedToken;
   } catch (error) {
-    Storage.clearLocal();
+    storageInstance.clearLocal();
     return <Navigate to="/" />;
   }
 }
