@@ -10,6 +10,7 @@ import * as APIService from "../../services/APIService";
 import { MethodData } from "./MethodData";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ToastForm } from "../../utils/ToastForm";
 
 function createEmptyRow() {
   return { name: "", value: "" };
@@ -155,16 +156,7 @@ function CreateNewRecipe() {
     );
 
     if (response?.status !== STATUS_CODE.UNAUTHORIZED && response?.id) {
-      toast.success("Tạo công thức mới thành công!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      toast.success("Tạo công thức mới thành công!", ToastForm);
 
       setTimeout(() => {
         navigate(`/food-recipe-detail?id=${response.id}`);

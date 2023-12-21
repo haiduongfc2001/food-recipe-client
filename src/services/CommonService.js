@@ -15,7 +15,7 @@ export const get = async (path, options = {}) => {
 // Create Base POST method
 export const post = async (path, data, options = {}) => {
   const response = await commonService.post(path, data, options);
-  return response.data;
+  return response;
 };
 
 // Create Base PUT method

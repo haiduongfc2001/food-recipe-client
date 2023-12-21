@@ -7,74 +7,32 @@ import * as APIService from "../../services/APIService";
 import { API_SERVICE, STATUS_CODE } from "../../utils/Constants";
 import storageInstance from "../../services/Storage";
 import { useNavigate } from "react-router-dom";
+import { ToastForm } from "../../utils/ToastForm";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [messageError, setMessageError] = useState("");
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (username.trim() === "") {
-      toast.error("Tên đăng nhập không được để trống!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return;
-    }
-    if (password.trim() === "") {
-      toast.error("Mật khẩu không được để trống!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return;
-    }
+    if (username.trim() === "" || password.trim() === "") return;
 
     const response = await APIService[API_SERVICE.USER_LOGIN]({
       username: username.trim(),
       password: password.trim(),
     });
 
-    console.log(response);
-
     if (response?.token) {
       storageInstance.updateLocalFoodRecipeToken(response.token);
       navigate("/");
-      toast.success("Đăng nhập thành công!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      toast.success("Đăng nhập thành công!", ToastForm);
     } else {
-      toast.error(response?.data?.message, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      setMessageError(response?.data?.message);
     }
   };
 
@@ -121,10 +79,14 @@ function Login() {
               required
             />
           </div>
+          {messageError && (
+            <p className="text-center text-red-500 text-sm pt-2">
+              {messageError}
+            </p>
+          )}
           <button
             type="submit"
-            className="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:from-blue-600 focus:to-purple-700"
-            onClick={handleLogin}
+            className="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:from-blue-600 focus:to-purple-700 focus:ring focus:border-blue-300 transform transition-transform duration-300 ease-in-out focus:scale-105"
           >
             Đăng nhập
           </button>
