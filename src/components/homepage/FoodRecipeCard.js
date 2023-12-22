@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import FormatDuration from "../../utils/FormatDuration";
 import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
 import defaultImage from "../../assets/food-placeholder.jpg";
+import { StarIcon } from "../../pages/food-recipe-comment/StarIcon";
 
 function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
@@ -82,7 +83,18 @@ function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
             <div>Thời gian: {FormatDuration(food.cooking_time)}</div>
             <div className="flex items-center">
               <span className="text-yellow-500 pr-1">{food.rating}</span>
-              <StarSVG />
+
+              {food?.rating > 0 ? (
+                <StarIcon
+                  className="mx-2"
+                  height="16"
+                  width="18"
+                  fill="yellow"
+                  offset={food?.rating * 20}
+                />
+              ) : (
+                <StarIcon className="mx-2" height="16" width="18" fill="gray" />
+              )}
             </div>
           </div>
         </div>

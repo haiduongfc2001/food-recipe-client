@@ -8,10 +8,13 @@ import { API_SERVICE, STATUS_CODE } from "../../utils/Constants";
 import storageInstance from "../../services/Storage";
 import { useNavigate } from "react-router-dom";
 import { ToastForm } from "../../utils/ToastForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [messageError, setMessageError] = useState("");
 
@@ -76,16 +79,37 @@ function Login() {
             >
               Mật khẩu
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Nhập mật khẩu"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div>
+              <label
+                htmlFor="password"
+                className="text-md font-bold text-gray-600 float-left"
+              >
+                Mật khẩu
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  className="mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Nhập mật khẩu"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <div
+                  className="absolute top-[70%] bottom-1/2 right-0 transform translate-y-1/2 flex items-center pr-4 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {password &&
+                    (showPassword ? (
+                      <FontAwesomeIcon icon={faEyeSlash} />
+                    ) : (
+                      <FontAwesomeIcon icon={faEye} />
+                    ))}
+                </div>
+              </div>
+            </div>
           </div>
           {messageError && (
             <p className="text-center text-red-500 text-sm pt-2">

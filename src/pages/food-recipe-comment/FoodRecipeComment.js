@@ -50,9 +50,7 @@ function FoodRecipeComment() {
       imageURL: "https://cdn.tgdd.vn/2021/01/CookProduct/gathum-1200x676.jpg",
     },
   ];
-  const ratingChanged = (newRating) => {
-    console.log(newRating);
-  };
+
   return (
     <div className="mx-10 mt-8">
       <div className="ml-8">
@@ -170,12 +168,7 @@ function FoodRecipeComment() {
               <div className="flex items-center justify-between mr-20">
                 <p className="text-lg mr-4">Đánh giá sao: </p>
                 {/* Star rating  */}
-                <ReactStars
-                  count={5}
-                  onChange={ratingChanged}
-                  size={28}
-                  activeColor="rgb(253 224 71)"
-                />
+                <ReactStars count={5} size={28} activeColor="rgb(253 224 71)" />
               </div>
               <div className="cursor-pointer ml-6">
                 <svg

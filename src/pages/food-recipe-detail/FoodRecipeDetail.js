@@ -5,12 +5,11 @@ import {
   API_SERVICE,
   REVIEW_WARNING,
   STATUS_CODE,
-  TOKEN,
 } from "../../utils/Constants";
 import { useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../utils/CapitalizeFirstLetter";
 import Loading from "../../components/homepage/Loading";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import YouTube from "react-youtube";
 import defaultImage from "../../assets/food-placeholder.jpg";
 import { StarIcon } from "../food-recipe-comment/StarIcon";
@@ -22,6 +21,8 @@ import personImage from "../../assets/person.webp";
 import { ToastForm } from "../../utils/ToastForm";
 import { faLaptopHouse } from "@fortawesome/free-solid-svg-icons";
 import storageInstance from "../../services/Storage";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 
 function FoodRecipeDetail() {
   const [dataRes, setDataRes] = useState({});
@@ -39,6 +40,7 @@ function FoodRecipeDetail() {
   const [reviews, setReviews] = useState(dataRes.reviews || []);
 
   const [isHovered, setIsHovered] = useState(false);
+  const [showAllIngredients, setShowAllIngredients] = useState(false);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -193,8 +195,15 @@ function FoodRecipeDetail() {
 
       const responseReview = await APIService[api]({ id: currentFoodRecipeID });
       setReviews(responseReview.reviews);
-      console.log(reviews);
     }
+  };
+
+  const visibleIngredients = showAllIngredients
+    ? dataRes?.ingredients
+    : dataRes?.ingredients?.slice(0, 3);
+
+  const handleToggleIngredients = () => {
+    setShowAllIngredients(!showAllIngredients);
   };
 
   useEffect(() => {
@@ -222,48 +231,62 @@ function FoodRecipeDetail() {
               <p className={styles.text}>
                 {capitalizeFirstLetter(dataRes?.name)}
               </p>
-              <div style={{ marginLeft: "50px" }}>
-                <div className="flex items-center">
-                  {Array.from(
-                    { length: Math.floor(dataRes?.rating) },
-                    (_, index) => (
+              <div className="ml-[50px]">
+                <Tippy
+                  content={`${dataRes?.rating} / 5`}
+                  placement="left"
+                  theme="light"
+                  arrow
+                  animation="scale"
+                  duration={300}
+                >
+                  <div className="flex items-center">
+                    {Array.from(
+                      { length: Math.floor(dataRes?.rating) },
+                      (_, index) => (
+                        <StarIcon
+                          key={index}
+                          className="mr-2 cursor-pointer"
+                          height="20"
+                          width="22"
+                          fill="yellow"
+                        />
+                      )
+                    )}
+
+                    {dataRes?.rating - Math.floor(dataRes?.rating) > 0 && (
                       <StarIcon
-                        key={index}
                         className="mr-2 cursor-pointer"
                         height="20"
                         width="22"
                         fill="yellow"
+                        offset={
+                          (dataRes?.rating - Math.floor(dataRes?.rating)) * 100
+                        }
                       />
-                    )
-                  )}
-                  <StarIcon
-                    className="mr-2 cursor-pointer"
-                    height="20"
-                    width="22"
-                    fill="yellow"
-                    offset={
-                      (dataRes?.rating - Math.floor(dataRes?.rating)) * 100 + 5
-                    }
-                  />
-                  {Array.from(
-                    { length: 5 - Math.floor(dataRes?.rating) - 1 },
-                    (_, index) => (
-                      <StarIcon
-                        key={index}
-                        className="mr-2 cursor-pointer"
-                        height="20"
-                        width="22"
-                        fill="gray"
-                      />
-                    )
-                  )}
-                  <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-500">
-                    |{" "}
-                    {dataRes?.reviews?.length
-                      ? `${dataRes?.reviews?.length} đánh giá`
-                      : "Chưa có đánh giá"}
-                  </p>
-                </div>
+                    )}
+
+                    {Array.from(
+                      { length: 5 - Math.ceil(dataRes?.rating) },
+                      (_, index) => (
+                        <StarIcon
+                          key={index}
+                          className="mr-2 cursor-pointer"
+                          height="20"
+                          width="22"
+                          fill="gray"
+                        />
+                      )
+                    )}
+
+                    <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-500">
+                      |{" "}
+                      {dataRes?.reviews?.length
+                        ? `${dataRes?.reviews?.length} đánh giá`
+                        : "Chưa có đánh giá"}
+                    </p>
+                  </div>
+                </Tippy>
                 <div
                   style={{
                     display: "flex",
@@ -280,19 +303,19 @@ function FoodRecipeDetail() {
                   >
                     Thành Phần
                   </p>
-                  {dataRes?.ingredients.map((result, index) => (
+                  {visibleIngredients.map((result, index) => (
                     <div className={styles.ingredient} key={index}>
+                      {/* Nội dung nguyên liệu */}
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <p style={{ display: "flex", fontSize: "18px" }}>
                           {result?.ingredient?.name &&
-                            capitalizeFirstLetter(
-                              result?.ingredient?.name
-                            )}{" "}
+                            capitalizeFirstLetter(result?.ingredient?.name)}
                         </p>
                         <p style={{ display: "flex", fontSize: "16px" }}>
                           Số Lượng: {result?.value}
                         </p>
                       </div>
+                      {/* Hình ảnh nguyên liệu */}
                       <div className={styles.ingredientImage}>
                         <img
                           src="https://cdn.tgdd.vn/2020/12/content/11-800x500-5.jpg"
@@ -301,15 +324,16 @@ function FoodRecipeDetail() {
                       </div>
                     </div>
                   ))}
-                  {dataRes?.ingredients.length > 4 && (
+                  {dataRes?.ingredients.length > 3 && (
                     <p
                       style={{
                         fontSize: "14px",
                         color: "blue",
                         cursor: "pointer",
                       }}
+                      onClick={handleToggleIngredients}
                     >
-                      Xem Thêm{" "}
+                      {showAllIngredients ? "Ẩn Bớt" : "Xem Thêm"}
                     </p>
                   )}
                   <div className={styles.shareAndComment}>
@@ -431,7 +455,9 @@ function FoodRecipeDetail() {
               <div className={styles.foodDescriptionReview}>
                 {!reviews.some(
                   (review) =>
-                    review.user?.username === DecodeToken(TOKEN).username
+                    review.user?.username ===
+                    DecodeToken(storageInstance.getLocalFoodRecipeToken())
+                      .username
                 ) && (
                   <form
                     className="bg-slate-100 rounded-lg w-full h-72"
@@ -504,13 +530,12 @@ function FoodRecipeDetail() {
                             <p className="text-[28px] text-left font-bold">
                               {review?.user?.username} &nbsp;&nbsp;
                             </p>
-                            <p className="text-[20px]">
-                              {reviews.some(
-                                (review) =>
-                                  review.user?.username ===
-                                  DecodeToken(TOKEN).username
-                              ) && "(Bạn)"}
-                            </p>
+                            {review.user?.username ===
+                              DecodeToken(
+                                storageInstance.getLocalFoodRecipeToken()
+                              ).username && (
+                              <p className="text-[20px]">(Bạn)</p>
+                            )}
                           </div>
                           <div className="flex items-center mt-2">
                             {Array.from({ length: 5 }, (_, index) => (
@@ -549,7 +574,9 @@ function FoodRecipeDetail() {
             <div className="grid grid-cols-4 gap-4 my-10 bg-slate-200  p-8 rounded-lg shadow-md">
               {foodRecipeTop?.map((food, index) => renderFoodCard(food, index))}
             </div>
-            <button className={styles.moreProduct}>Xem Thêm </button>
+            <Link to={"/"}>
+              <button className={styles.moreProduct}>Xem Thêm </button>
+            </Link>
           </div>
         </>
       )}

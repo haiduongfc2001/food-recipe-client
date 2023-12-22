@@ -1,12 +1,12 @@
 import { extractErrorInfo } from "./ExtractErrorInfo";
 import * as CommonService from "./CommonService";
-import { TOKEN } from "../utils/Constants";
+import storageInstance from "./Storage";
 
 export const search = async ({
   search,
   ingredients,
   cooking_time,
-  max_max_rating,
+  max_rating,
   page_size,
   sort,
   by,
@@ -18,7 +18,7 @@ export const search = async ({
         search,
         ingredients,
         cooking_time,
-        max_max_rating,
+        max_rating,
         page_size,
         sort,
         by,
@@ -56,7 +56,7 @@ export const createNewRecipe = async (formDataToSend) => {
   try {
     const res = await CommonService.post("/food/create-food", formDataToSend, {
       headers: {
-        Authorization: "Bearer " + TOKEN,
+        Authorization: "Bearer " + storageInstance.getLocalFoodRecipeToken(),
       },
     });
 
@@ -73,7 +73,7 @@ export const postReview = async ({ food_id, rating, review }) => {
       { food_id, rating, review },
       {
         headers: {
-          Authorization: "Bearer " + TOKEN,
+          Authorization: "Bearer " + storageInstance.getLocalFoodRecipeToken(),
         },
       }
     );

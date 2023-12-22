@@ -6,8 +6,6 @@ export const NOT_FOUND_RESULT = "Xin lỗi, không tìm thấy kết quả";
 export const NOT_FOUND_RESULT_FOR_SEARCH =
   "Chúng tôi không thể tìm thấy bất kỳ kết quả nào cho tìm kiếm của bạn.";
 export const LOADING_DATA = "Đang tải...";
-export const TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImEiLCJpZCI6MSwiaWF0IjoxNzAyOTY1OTY1fQ.7S19YeWlLBISvlKU-oY0K6MadwT5Gt6ufDXjoj2ZY5Y";
 export const CONFIRM_PWD_VALIDATE = "Mật khẩu và mật khẩu xác nhận không khớp!";
 export const PWD_VALIDATE =
   "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường và số!";
@@ -27,7 +25,8 @@ export const STATUS_CODE = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
-export const REACT_APP_BASE_URL = "http://localhost:5000";
+// export const REACT_APP_BASE_URL = "http://localhost:5000";
+export const REACT_APP_BASE_URL = "https://foodrecipeserver-8r79.onrender.com";
 
 export const API_SERVICE = {
   SEARCH: "search",
