@@ -121,56 +121,63 @@ function Homepage() {
         className="flex items-center justify-evenly bg-slate-200 mx-10 py-2 rounded-lg rounded-tl-none rounded-tr-none"
         ref={inputValue ? foodCardRef : null}
       >
-        <div onClick={handleModalFilterOpen}>
-          <FontAwesomeIcon icon={faFilter} />
-          <button className="ml-4">Bộ lọc</button>
-        </div>
-        <div className="flex items-center">
-          <span className="mr-4">Hiển thị</span>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-            className="bg-blue-200 rounded-lg p-2"
-          >
-            {DISPLAY_PAGE_SIZE.map((value, index) => (
-              <option key={index} value={value}>
-                {value}
-              </option>
-            ))}
-          </select>
-        </div>
+        {inputValue && (
+          <>
+            <div onClick={handleModalFilterOpen}>
+              <FontAwesomeIcon icon={faFilter} />
+              <button className="ml-4">Bộ lọc</button>
+            </div>
+            <div className="flex items-center">
+              <span className="mr-4">Hiển thị</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) =>
+                  handleItemsPerPageChange(Number(e.target.value))
+                }
+                className="bg-blue-200 rounded-lg p-2"
+              >
+                {DISPLAY_PAGE_SIZE.map((value, index) => (
+                  <option key={index} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        <div className=" z-10">
-          <FontAwesomeIcon icon={faArrowUpZA} />
-          {/* <span className="mx-4">Sắp xếp</span> */}
-          <div className="relative inline-block mx-4">
-            <button
-              className="bg-blue-200 text-gray-700 font-semibold py-2 px-4 rounded-lg shadow-md w-40 flex items-center justify-around hover:bg-blue-300 focus:outline-none"
-              onClick={toggleDropdown}
-            >
-              {sortOption ? sortOption : "Sắp xếp"}
-              <FontAwesomeIcon
-                icon={faSortDown}
-                className="flex items-center"
-              />
-            </button>
-            {isOpen && (
-              <div className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md w-40">
-                <ul className="py-2">
-                  {SortOptions.map((option, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handleSortOptionClick(option)}
-                    >
-                      {option.title}
-                    </li>
-                  ))}
-                </ul>
+            <div className=" z-10">
+              <FontAwesomeIcon icon={faArrowUpZA} />
+              <div className="relative inline-block mx-4">
+                <button
+                  className="bg-blue-200 text-gray-700 font-semibold py-2 px-4 rounded-lg shadow-md w-40 flex items-center justify-around hover:bg-blue-300 focus:outline-none"
+                  onClick={toggleDropdown}
+                >
+                  {sortOption ? sortOption : "Sắp xếp"}
+                  <div className="flex items-start justify-center">
+                    <FontAwesomeIcon
+                      icon={faSortDown}
+                      className="flex items-center"
+                    />
+                  </div>
+                </button>
+                {isOpen && (
+                  <div className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md w-40">
+                    <ul className="py-2">
+                      {SortOptions.map((option, index) => (
+                        <li
+                          key={index}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => handleSortOptionClick(option)}
+                        >
+                          {option.title}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </div>
 
       <div>

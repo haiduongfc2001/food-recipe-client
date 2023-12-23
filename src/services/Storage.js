@@ -9,7 +9,7 @@ class Storage {
   };
   getSessionInputValue = () => {
     const storedData = sessionStorage.getItem("inputValue");
-    return storedData ? JSON.parse(storedData) : [];
+    return storedData ? storedData : "";
   };
 
   // setItem
