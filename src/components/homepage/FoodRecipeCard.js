@@ -91,6 +91,7 @@ function FoodRecipeCard({ itemsPerPage, searchResult, foodCardRef }) {
                   width="18"
                   fill="yellow"
                   offset={food?.rating * 20}
+                  id = {`grad${index}`}
                 />
               ) : (
                 <StarIcon className="mx-2" height="16" width="18" fill="gray" />
