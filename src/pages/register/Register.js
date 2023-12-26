@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as APIService from "../../services/APIService";
 import {
   API_SERVICE,
+  USERNAME_VALIDATE,
   CONFIRM_PWD_VALIDATE,
   PWD_VALIDATE,
   STATUS_CODE,
@@ -18,7 +19,7 @@ import {
   faKey,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { validatePassword } from "../../utils/Regex";
+import { validateUsername, validatePassword } from "../../utils/Regex";
 import storageInstance from "../../services/Storage";
 import FoodLRegister from "../../assets/food-register.jpg";
 
@@ -42,6 +43,12 @@ function Register() {
     setPasswordError(false);
     setConfirmPasswordError(false);
     setUsernameError(false);
+
+    if (!validateUsername(username)) {
+      setUsernameError(true);
+      setUsernameErrorMessage(USERNAME_VALIDATE);
+      return;
+    }
 
     if (!validatePassword(password)) {
       setPasswordError(true);
@@ -114,12 +121,12 @@ function Register() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
-              {usernameError && (
-                <p className="text-left text-red-500 text-sm pt-2">
-                  {usernameErrorMessage}
-                </p>
-              )}
             </div>
+            {usernameError && (
+              <p className="text-left text-red-500 text-sm pt-2">
+                {usernameErrorMessage}
+              </p>
+            )}
           </div>
           <div>
             <label
