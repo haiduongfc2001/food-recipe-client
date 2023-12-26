@@ -12,9 +12,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import { ToastForm } from "../../utils/ToastForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faKey,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { validatePassword } from "../../utils/Regex";
 import storageInstance from "../../services/Storage";
+import FoodLRegister from "../../assets/food-register.jpg";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -72,8 +78,16 @@ function Register() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
-      <div className="max-w-md w-full p-8 bg-slate-200 shadow-lg rounded-md space-y-4">
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${FoodLRegister})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="max-w-lg w-full p-8 bg-gray-200 shadow-lg rounded-xl space-y-4 mx-2">
         <h2 className="text-3xl font-bold text-center text-gray-800">
           Đăng ký
         </h2>
@@ -85,21 +99,27 @@ function Register() {
             >
               Tên đăng nhập
             </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              className="mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Nhập tên đăng nhập"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-            {usernameError && (
-              <p className="text-left text-red-500 text-sm pt-2">
-                {usernameErrorMessage}
-              </p>
-            )}
+            <div className="relative">
+              <FontAwesomeIcon
+                icon={faUser}
+                className="absolute top-[68%] transform -translate-y-1/2 left-3 text-black border-r-2 border-solid border-gray-400 pr-2 w-[16px]"
+              />
+              <input
+                type="text"
+                id="username"
+                name="username"
+                className="pl-10 mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Nhập tên đăng nhập"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+              {usernameError && (
+                <p className="text-left text-red-500 text-sm pt-2">
+                  {usernameErrorMessage}
+                </p>
+              )}
+            </div>
           </div>
           <div>
             <label
@@ -109,11 +129,15 @@ function Register() {
               Mật khẩu
             </label>
             <div className="relative">
+              <FontAwesomeIcon
+                icon={faKey}
+                className="absolute top-[68%] transform -translate-y-1/2 left-3 text-black border-r-2 border-solid border-gray-400 pr-2"
+              />
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
-                className="mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
+                className="pl-10 mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Nhập mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -145,11 +169,15 @@ function Register() {
               Xác nhận mật khẩu
             </label>
             <div className="relative">
+              <FontAwesomeIcon
+                icon={faKey}
+                className="absolute top-[68%] transform -translate-y-1/2 left-3 text-black border-r-2 border-solid border-gray-400 pr-2"
+              />
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 name="confirmPassword"
-                className="mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
+                className="pl-10 mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Nhập lại mật khẩu"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

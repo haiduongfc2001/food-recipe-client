@@ -33,7 +33,6 @@ const Header = () => {
   const api = API_SERVICE.SEARCH;
 
   const handleSearchChange = (e) => {
-    if (e.target.value.trim() === "") return;
     setInputValue(e.target.value);
   };
 

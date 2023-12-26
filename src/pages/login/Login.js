@@ -9,7 +9,13 @@ import storageInstance from "../../services/Storage";
 import { useNavigate } from "react-router-dom";
 import { ToastForm } from "../../utils/ToastForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faKey,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import FoodLogin from "../../assets/food-login.jpg";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -48,8 +54,16 @@ function Login() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
-      <div className="max-w-md w-full p-8 bg-slate-200 shadow-lg rounded-md space-y-4">
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${FoodLogin})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="max-w-md w-full p-8 bg-gray-200 shadow-lg rounded-xl space-y-4 mx-2">
         <h2 className="text-3xl font-bold text-center text-gray-800">
           Đăng nhập
         </h2>
@@ -61,16 +75,22 @@ function Login() {
             >
               Tên đăng nhập
             </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              className="mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Nhập tên đăng nhập"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <FontAwesomeIcon
+                icon={faUser}
+                className="absolute top-[68%] transform -translate-y-1/2 left-3 text-black border-r-2 border-solid border-gray-400 pr-2 w-[16px]"
+              />
+              <input
+                type="text"
+                id="username"
+                name="username"
+                className="pl-10 mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Nhập tên đăng nhập"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
           </div>
           <div>
             <label
@@ -79,35 +99,31 @@ function Login() {
             >
               Mật khẩu
             </label>
-            <div>
-              <label
-                htmlFor="password"
-                className="text-md font-bold text-gray-600 float-left"
+            <div className="relative">
+              <FontAwesomeIcon
+                icon={faKey}
+                className="absolute top-[68%] transform -translate-y-1/2 left-3 text-black border-r-2 border-solid border-gray-400 pr-2"
+              />
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                className="pl-10 mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Nhập mật khẩu"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <div
+                className="absolute top-[70%] bottom-1/2 right-0 transform translate-y-1/2 flex items-center pr-4 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                Mật khẩu
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  name="password"
-                  className="mt-1 p-2 w-full rounded-md border-1 border-solid border-gray-400 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Nhập mật khẩu"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <div
-                  className="absolute top-[70%] bottom-1/2 right-0 transform translate-y-1/2 flex items-center pr-4 cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {password &&
-                    (showPassword ? (
-                      <FontAwesomeIcon icon={faEyeSlash} />
-                    ) : (
-                      <FontAwesomeIcon icon={faEye} />
-                    ))}
-                </div>
+                {password &&
+                  (showPassword ? (
+                    <FontAwesomeIcon icon={faEyeSlash} />
+                  ) : (
+                    <FontAwesomeIcon icon={faEye} />
+                  ))}
               </div>
             </div>
           </div>
